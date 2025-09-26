@@ -20,9 +20,12 @@
             <div class="chat-record-image" v-if="chat.messageType === 'image'">
               <ImageWithFallback :src="chat.message" />
             </div>
+            <div class="chat-record-emoji" v-if="chat.messageType === 'emoji'">
+              <ImageMapperComponent :text="chat.message" />
+            </div>
           </div>
 
-          <YlAvatar class="chat-record-avatar" :src="userState.userInfo.avatar"></YlAvatar>
+          <YlAvatar class="chat-record-avatar" :src="userState.userInfo.userAvatar"></YlAvatar>
         </div>
         <!-- 其他人消息，显示在左边 -->
         <div class="chat-record-left" v-else>
@@ -31,6 +34,9 @@
             <div class="chat-record-text user-select" v-if="chat.messageType === 'text'">{{ chat.message }}</div>
             <div class="chat-record-image" v-if="chat.messageType === 'image'">
               <ImageWithFallback :src="chat.message" />
+            </div>
+            <div class="chat-record-emoji" v-if="chat.messageType === 'emoji'">
+              <ImageMapperComponent :text="chat.message" />
             </div>
           </div>
         </div>
@@ -46,9 +52,10 @@ import { useUserStore } from '@/stores'
 import { formatChatDisplayTime } from '@/utils/common'
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue'
 import YlAvatar from '@/components/Image/YlAvatar.vue'
+import ImageMapperComponent from '@/components/Image/ImageMapperComponent.vue'
 
 const userState = useUserStore()
-const userInfo = userState.getUserState()
+const userInfo = userState.userInfo
 const chatWrapperRef = ref<HTMLElement>()
 const props = defineProps({
   chating: {
@@ -189,7 +196,6 @@ defineExpose({ lockScroll, restoreScroll, scrollToBottom })
   overflow-y: auto !important;
   scrollbar-width: auto;
   -ms-overflow-style: auto;
-  scrollbar-width: auto;
   scrollbar-color: #c4c4c4 transparent;
 }
 
@@ -272,6 +278,17 @@ defineExpose({ lockScroll, restoreScroll, scrollToBottom })
   border-radius: 12px;
   min-width: 320px;
   min-height: 180px;
+
+  .el-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.chat-record-emoji {
+  width: 180px;
+  height: 180px;
 
   .el-image {
     display: block;

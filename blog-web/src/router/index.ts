@@ -157,12 +157,36 @@ const fixedRoute = [
     props: true
   },
   {
+    path: '/chat',
+    name: 'chat-empty',
+    component: () => import('@/views/chat/ChatLayout.vue'),
+    meta: {
+      title: '聊天',
+    },
+    props: true
+  },
+  {
     path: '/message',
     name: 'Message',
     component: () => import('@/views/message/message.vue'),
     meta: {
       title: '留言',
     },
+  },
+  {
+    path: '/chatai/:sessionId',
+    name: 'chatai',
+    component: () => import('@/views/chatai/ChatAILayout.vue'),
+    meta: {
+      title: 'AI对话',
+    },
+    props: true
+  },
+  {
+    path: '/chatai',
+    name: 'chatai-empty',
+    component: () => import('@/views/chatai/ChatAILayout.vue'),
+    meta: { title: 'AI对话' }
   },
 ]
 

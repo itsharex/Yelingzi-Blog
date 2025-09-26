@@ -19,9 +19,10 @@
             </GroupChatRecord>
           </el-main>
           <el-footer class="chat-footer">
-            <ChatInput v-if="chating.chatType === 'single'" :chating="chating">
+            <ChatInput v-if="chating.chatType === 'single'" :chating="chating" ref="chatInputRef">
             </ChatInput>
-            <GroupChatInput v-else-if="chating.chatType === 'group'" :chating="chating"></GroupChatInput>
+            <GroupChatInput v-else-if="chating.chatType === 'group'" :chating="chating" ref="chatInputRef">
+            </GroupChatInput>
           </el-footer>
         </el-container>
       </el-container>
@@ -86,6 +87,7 @@ const state = reactive({
 const { chating, unReadMessage, hasMore } = toRefs(state)
 const chatRef = ref()
 const starting = ref(true)
+const chatInputRef = ref()
 
 /* ---------------- WebSocket ---------------- */
 let ws: WebSocket | null = null
@@ -130,6 +132,7 @@ function closeWs() {
 function handleWsMessage(raw: WsMsg) {
   const { receiver, message } = raw
 
+  console.log("raw:", raw)
   /* ---- 1. 当前会话 ---- */
   if (state.currentChatId === receiver) {
     chating.value.chatMessageList.push(message)
@@ -168,7 +171,11 @@ const clearSelection = () => {
 
 const onMouseDown = (e: MouseEvent) => {
   const block = document.querySelector('.chat-record')
-
+  const chatEmojiBlock = document.querySelector('.emoji-container')
+  const chatEmojiButtonBlock = document.querySelector('.icon-emoji')
+  if (chatEmojiBlock && !chatEmojiBlock.contains(e.target as Node) && chatEmojiButtonBlock && !chatEmojiButtonBlock.contains(e.target as Node)) {
+    chatInputRef.value?.nonEmojiSelect()
+  }
   if (block && !block.contains(e.target as Node)) {
     clearSelection()
   }
@@ -395,8 +402,6 @@ async function onLoadMore(done: () => void) {
 
 }
 
-
-
 /* ---------------- 生命周期 ---------------- */
 onMounted(() => {
   openWs()
@@ -436,7 +441,7 @@ watch(
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #f5f5f5;
+  background-color: var(--grey-1);
 }
 
 .el-container {
@@ -446,7 +451,7 @@ watch(
 .chat-size {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background: #fff;
+
   overflow: hidden;
   width: 990px;
   height: 650px;
@@ -455,7 +460,7 @@ watch(
 .chat-aside {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e4e7ed;
+  border-right: 1px solid var(--color-pink-light);
   padding: 12px 0;
   height: 100%;
 }
@@ -465,8 +470,7 @@ watch(
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  border-bottom: 1px solid #e4e7ed;
-  background: #fafafa;
+  border-bottom: 1px solid var(--color-pink-light);
 
   h1 {
     margin: 0;
@@ -483,14 +487,12 @@ watch(
 
 .chat-main {
   padding: 0 0 0 16px;
-  background: #fafafa;
   overflow-y: auto;
 }
 
 .chat-footer {
-  border-top: 1px solid #e4e7ed;
+  border-top: 1px solid var(--color-pink-light);
   padding: 8px 12px;
-  background: #fff;
   height: 152px;
 }
 </style>

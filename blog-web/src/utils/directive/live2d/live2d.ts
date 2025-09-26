@@ -1,10 +1,11 @@
 // 修改 Vue 指令实现 (directives/pio.ts)
+import { waitForPio } from '@/utils/waitForPio'
 import type { App, Directive } from 'vue'
 
 const pioDirective: Directive = {
-  mounted(el: HTMLElement, binding) {
+  async mounted(el: HTMLElement, binding) {
     // 获取全局实例
-    const pio = window.PioInstance
+    const pio = await waitForPio()
 
     // 参数处理
     const { value } = binding
@@ -22,7 +23,7 @@ const pioDirective: Directive = {
         }
       })
     }
-
+    console.log('pio directive mounted:', text, type)
     // 添加事件监听
     el.addEventListener('mouseenter', handler)
 

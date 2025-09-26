@@ -7,7 +7,7 @@ export const getTalkListService = () => request.get('/api/user/talk/list')
 
 //查看说说
 export const getTalkListByPageService = (page: number, pageSize: number) => 
-    request.get('/api/admin/talk/page', {
+    request.get('/api/user/talk/page', {
     params: {
       page: page,
       pageSize: pageSize

@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { getLoginEmailVerifyCodeService, getVerifyCodeService, userInfoService, userLoginService, userRegisterService, userVerifyCodeLoginService } from '@/api/login'
+import { getLoginEmailVerifyCodeService, getRegEmailVerifyCodeService, getVerifyCodeService, userInfoService, userLoginService, userRegisterService, userVerifyCodeLoginService } from '@/api/login'
 import { useUserStore } from '@/stores'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { Md5 } from 'ts-md5'
@@ -124,6 +124,7 @@ const form = reactive({
 const isPasswordLogin = ref(true)
 const isCounting = ref(false)
 const countdown = ref(0)
+const isLogin = ref(true)
 
 /* ---------- 校验规则 ---------- */
 const rules = {
@@ -220,26 +221,36 @@ const handleRegister = async () => {
 /* 发送邮箱验证码 */
 const getMailVerifyCode = async () => {
   if (isCounting.value) return
-  try {
-    await registForm.value?.validateField('email')
-  } catch {
-    ElMessage.error('请完善表单后再提交')
-    return
+
+  if (isLogin.value) {
+    try {
+      await loginForm.value?.validateField('email')
+    } catch {
+      ElMessage.error('请完善表单后再提交')
+      return
+    }
+    await getLoginEmailVerifyCodeService({ email: form.email })
+  } else {
+    try {
+      await registForm.value?.validateField('email')
+
+    } catch {
+      ElMessage.error('请完善表单后再提交')
+      return
+    }
+    await getRegEmailVerifyCodeService({ email: form.email })
   }
 
-  try {
-    await getLoginEmailVerifyCodeService({ email: form.email })
-    ElMessage.success('验证码已发送')
-    startCountdown()
-  } catch (e: any) {
-  }
+  ElMessage.success('验证码已发送')
+  startCountdown()
+
 }
 
 /* 登录成功后续 */
 const loginSuccess = async (token: { accessToken: string; refreshToken: string }) => {
   userStore.setTokens(token.accessToken, token.refreshToken)
   const { data: userRes } = await userInfoService()
-  userStore.setUserState({ ...userRes.data, login: true })
+  userStore.setUserState({ ...userRes.data })
 }
 
 /* 跳转逻辑 */
@@ -253,8 +264,14 @@ const resetForm = () => {
   Object.assign(form, { email: '', password: '', repassword: '', verifyCode: '' })
   getVerifyCode()
 }
-const switchToLogin = () => document.querySelector('#loginAndRegist')?.classList.remove('right-panel-active')
-const switchToRegister = () => document.querySelector('#loginAndRegist')?.classList.add('right-panel-active')
+const switchToLogin = () => {
+  document.querySelector('#loginAndRegist')?.classList.remove('right-panel-active')
+  isLogin.value = true
+}
+const switchToRegister = () => {
+  document.querySelector('#loginAndRegist')?.classList.add('right-panel-active')
+  isLogin.value = false
+}
 
 /* 验证码图片 */
 const verifyCodeKey = ref('')

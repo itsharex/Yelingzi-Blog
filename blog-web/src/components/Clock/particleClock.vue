@@ -172,12 +172,8 @@ const getPoints = () => {
 }
 
 onMounted(() => {
-
   initCanvas()
-
   draw()
-  console.log(canvasEl.value?.width)
-  console.log(canvasEl.value?.height)
 })
 
 

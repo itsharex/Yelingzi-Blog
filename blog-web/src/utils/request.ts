@@ -80,31 +80,14 @@ instance.interceptors.response.use(
     }
 
     /* 其他 401 / 500 统一处理 */
-    if (response?.status === 401 && (response.data as any)?.msg === 'login') {
+    if (response?.status === 401 && (response.data as any)?.msg === 'accessTokenInvalid') {
       user.removeToken()
       router.push('/login')
+      return
     }
     ElMessage.error((response?.data as any)?.msg || '服务异常')
     return Promise.reject(err)
   }
 )
 
-//axios响应拦截器
-// instance.interceptors.response.use(
-
-//     error => {
-//       console.log('err' + error)
-//       let { message } = error;
-//       if (message == "Network Error") {
-//         message = "后端接口连接异常";
-//       }
-//       else if (message.includes("timeout")) {
-//         message = "系统接口请求超时";
-//       }
-//       else if (message.includes("Request failed with status code")) {
-//         message = "系统接口" + message.substr(message.length - 3) + "异常";
-//       }
-//       return Promise.reject(error)
-
-// })
 export default instance

@@ -10,10 +10,11 @@
     <!-- 向下按钮 -->
     <SvgIcon name="icon-xiala" class="arrow-down pointer" size="120" @click="scrollDown" />
   </div>
+  <div class="bottom"></div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, inject, type Ref } from 'vue'
+import { ref, inject, type Ref } from 'vue'
 import WaveOne from "@/components/Waves/WaveOne.vue"
 import BgImage from '@/components/Image/BgImage.vue';
 const brandRef = ref<HTMLElement>()
@@ -48,10 +49,6 @@ const scrollDown = () => {
   }
 }
 </script>
-
-
-
-
 
 <style lang="scss" scoped>
 @use '/src/assets/styles/mixin.scss' as m;
@@ -93,6 +90,14 @@ const scrollDown = () => {
   animation: arrow-shake 1.5s ease-out infinite;
   z-index: 8;
   color: var(--color-yellow);
+}
+
+.bottom {
+  height: 80px;
+  background-color: var(--grey-1);
+  //解决滚动时出现缝隙问题
+  margin-top: -20px;
+
 }
 
 @media (max-width: 767px) {

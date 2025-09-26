@@ -176,7 +176,6 @@ const handleTagLeave = () => {
 const getTagList = async () => {
   const res = await getTagListService();
   data.value = res.data.data;
-  console.log(data.value);
 };
 
 // 生命周期钩子

@@ -48,6 +48,7 @@ import ImageList from '@/components/Image/ImageList.vue';
 import { addTalkLikeService, delTalkLikeService, getTalkByIdService, getTalkLikeService } from '@/api/talk';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
+import SvgIcon from '@/components/SvgIcon/SvgIcon.vue';
 
 const router = useRouter()
 import { t } from '@/utils/i18n'

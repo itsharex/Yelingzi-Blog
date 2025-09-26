@@ -30,6 +30,13 @@ export const sendMessageService = (parmas: { type: string, message: string }, de
   })
 }
 
+//发送表情
+export const sendEmojiMessageService = (parmas: { type: string, message: string }, device: string) => {
+  return request.post('/api/chat/send/emoji', parmas, {
+    headers: { 'x-host': device }
+  })
+}
+
 //发送图片消息
 export const sendSingleImageService = (data: FormData, device: string) => {
   return request.post('/api/chat/send/image', data, {

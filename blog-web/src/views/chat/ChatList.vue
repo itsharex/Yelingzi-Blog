@@ -1,5 +1,5 @@
 <template>
-  <div v-for="chat in chatStore.chatList" class="chat-list" @click="pushChating(chat)" :key="chat.id"
+  <div v-for="chat in chatStore.chatList" class="chat-list pointer" @click="pushChating(chat)" :key="chat.id"
     :class="{ active: chat.id === props.currentChatId }">
     <el-avatar :src="chat.avatar"></el-avatar>
     <div class="chat-content">
@@ -69,11 +69,11 @@ const pushChating = (chat: Chat) => {
   }
 
   &:hover {
-    background-color: #f3f3f3;
+    background-color: var(--hover-secondary);
   }
 
   &.active {
-    background-color: var(--el-color-primary-light-9); // 主题色浅色背景
+    background-color: var(--el-color-primary-light-9);
     color: var(--el-color-primary);
   }
 

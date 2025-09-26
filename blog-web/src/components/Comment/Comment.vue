@@ -207,7 +207,6 @@ const cancelLike = async (commentId: number) => {
       ElMessage.error("取消点赞失败");
     }
   } catch (error) {
-    console.error("取消点赞请求失败:", error);
     ElMessage.error("取消点赞请求失败");
   }
 };
@@ -304,7 +303,6 @@ const getIsLikeList = async () => {
 const getList = async () => {
   await getIsLikeList()
 
-  console.log("文章或说说ID:" + props.id)
   // 1为文章 2为说说
   if (props.commentType == 1) {
     const res = await getArticleCommentListService(props.id)

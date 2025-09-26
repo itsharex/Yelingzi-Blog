@@ -54,6 +54,7 @@
   --lightRed: #ff4b2b;
   --gradualRed: linear-gradient(to right, #ff4b2b, #ff416c);
   --md-bg: #fff;
+  --hover-secondary: #f0f5ff;
 }
 
 /* 黑夜颜色 */
@@ -100,6 +101,7 @@
   --lightRed: #ff4b2b;
   --gradualRed: linear-gradient(to right, #ff4b2b, #ff416c);
   --md-bg: #000;
+  --hover-secondary: #1e2a47;
 
   img {
     filter: brightness(0.8);

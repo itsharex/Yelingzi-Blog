@@ -15,6 +15,7 @@
           <div class="chat-record-content">
             <div class="chat-record-right-nickname">{{ chat.nickname }}</div>
             <div class="chat-record-text user-select" v-if="chat.messageType === 'text'">{{ chat.message }}</div>
+            <ImageMapperComponent v-if="chat.messageType === 'emoji'" class="chat-record-emoji" :text="chat.message" />
           </div>
 
           <YlAvatar class="chat-record-avatar" :src="chat.userAvatar"></YlAvatar>
@@ -25,7 +26,9 @@
           <div class="chat-record-content">
             <div class="chat-record-nickname">{{ chat.nickname }}</div>
             <div class="chat-record-text user-select" v-if="chat.messageType === 'text'">{{ chat.message }}</div>
+            <ImageMapperComponent v-if="chat.messageType === 'emoji'" class="chat-record-emoji" :text="chat.message" />
           </div>
+
         </div>
       </div>
     </div>
@@ -38,9 +41,10 @@ import type { ChatMessage } from '@/types/chatType'
 import { useUserStore } from '@/stores'
 import { formatChatDisplayTime } from '@/utils/common'
 import YlAvatar from '@/components/Image/YlAvatar.vue'
+import ImageMapperComponent from '@/components/Image/ImageMapperComponent.vue'
 
 const userState = useUserStore()
-const userInfo = userState.getUserState()
+const userInfo = userState.userInfo
 const chatWrapperRef = ref<HTMLElement>()
 const props = defineProps({
   chatRecordList: {
@@ -194,6 +198,18 @@ defineExpose({ lockScroll, restoreScroll, scrollToBottom })
     background: #95ec69;
     color: #000;
     order: -1;
+  }
+}
+
+.chat-record-emoji {
+  padding-top: 12px;
+  width: 180px;
+  height: 180px;
+
+  .el-image {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 }
 

@@ -3,7 +3,7 @@
     <div class="box-normal">
 
       <div class="reply-box-avatar">
-        <el-avatar :size="50" v-if="user.avatar" :src="user.avatar" alt="" />
+        <el-avatar :size="50" v-if="user.userAvatar" :src="user.userAvatar" alt="" />
         <el-avatar :size="50" v-else alt="">{{ t('user') }}</el-avatar>
       </div>
 
@@ -40,7 +40,7 @@ import { t } from '@/utils/i18n'
 const router = useRouter()
 const route = useRoute()
 const userState = useUserStore()
-const user = userState.getUserState()
+const user = userState.userInfo
 
 const emit = defineEmits(["reload"]);
 

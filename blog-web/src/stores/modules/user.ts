@@ -10,14 +10,11 @@ export const useUserStore = defineStore(
       id: -1,
       email: '123456@123.com',
       nickname: '游客',
-      avatar: avatar,
+      userAvatar: avatar,
     });
 
     // 用户状态
-    const userState = ref({
-      lastShowWeb: '',
-      isLogin: false,
-    });
+    const lastShowWeb = ref('')
     const accessToken = ref('')
     const refreshToken = ref('')
 
@@ -35,6 +32,7 @@ export const useUserStore = defineStore(
     const removeToken = () => {
       accessToken.value = ''
       refreshToken.value = ''
+      removeUserState()
     }
     const setTokens = (at: string, rt: string) => {
       accessToken.value = at
@@ -45,53 +43,42 @@ export const useUserStore = defineStore(
     const removeUserState = () => {
       userInfo.value.id = -1;
       userInfo.value.nickname = '游客' + deviceId.value;
-      userInfo.value.avatar = avatar;
-      userState.value.isLogin = false;
+      userInfo.value.userAvatar = avatar;
     };
 
     // 设置用户状态
     const setUserState = (userData: {
       id: number;
       nickname: string;
-      avatar: string;
-      login: boolean;
+      userAvatar: string;
     }) => {
       userInfo.value.id = userData.id;
       userInfo.value.nickname = userData.nickname;
-      userInfo.value.avatar = userData.avatar;
-      userState.value.isLogin = userData.login;
+      userInfo.value.userAvatar = userData.userAvatar;
+      viewDate.value = undefined
     };
 
-    // 获取用户状态
-    const getUserState = () => {
-      return {
-        id: userInfo.value.id,
-        nickname: userInfo.value.nickname,
-        avatar: userInfo.value.avatar,
-        email: userInfo.value.email
-      };
-    };
 
     // 获取是否登录
     const getIsLogin = () => {
-      return userState.value.isLogin;
+      return accessToken.value != '' ? true : false;
     };
 
     // 设置最后显示的网页
     const setLastShowWeb = (url: string) => {
-      userState.value.lastShowWeb = url;
+      lastShowWeb.value = url;
     };
 
     // 获取最后显示的网页
     const getLastShowWeb = () => {
-      return userState.value.lastShowWeb;
+      return lastShowWeb.value;
     };
 
     // 获取用户状态（组合）
     const getUserStateCombined = computed(() => {
       return {
         ...userInfo,
-        ...userState.value,
+        ...lastShowWeb,
       };
     });
 
@@ -116,7 +103,6 @@ export const useUserStore = defineStore(
       removeToken,
       removeUserState,
       setUserState,
-      getUserState,
       getIsLogin,
       setLastShowWeb,
       getLastShowWeb,
@@ -125,7 +111,7 @@ export const useUserStore = defineStore(
       checkIsFirstView,
 
       webSiteInfo,
-      userState,
+      lastShowWeb,
       getUserStateCombined,
       userInfo,
       viewDate,

@@ -25,7 +25,7 @@ import MyFooter from '@/components/Layout/Footer/Footer.vue'
 import ProgressBar from '@/components/Layout/Progress/ProgressBar.vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores';
-import { userInfoService, userViewService, viewService } from '@/api/login';
+import { userInfoService, viewService } from '@/api/login';
 
 const userState = useUserStore()
 const layoutRef = ref<HTMLElement | null>(null)
@@ -58,7 +58,6 @@ watch(
 // 今天 YYYY-MM-DD
 const todayStr = () => dayjs().format('YYYY-MM-DD')
 
-// 是否今天已上报过
 const isReportedToday = ref(
   userState.viewDate === todayStr()
 )
@@ -67,14 +66,8 @@ const isReportedToday = ref(
 const handleDailyFirstView = async () => {
   if (isReportedToday.value) return
 
-  // 真正上报
-  if (userState.getIsLogin()) {
-    await userViewService()
-  } else {
-    await viewService()
-  }
+  await viewService(userState.deviceId)
 
-  // 标记今天已上报
   userState.setViewDate(todayStr())
   isReportedToday.value = true
 }
@@ -95,12 +88,11 @@ const updateDisabledSmooth = (value: boolean) => {
 const checkLogin = async () => {
   if (userState.getIsLogin()) {
     const { data: userRes } = await userInfoService()
-    if (userRes.code === 1) {
-      userState.setUserState({
-        ...userRes.data,
-        login: true
-      })
-    }
+
+    userState.setUserState({
+      ...userRes.data,
+    })
+
   }
 }
 

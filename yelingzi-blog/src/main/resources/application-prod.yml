@@ -1,25 +1,44 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blogs
+    url: jdbc:mysql://localhost:3306/ye_ling
     username: root
-    password:
+    password: 
   rabbitmq:
     host: localhost
     port: 5672
-    username:
-    password:
-    virtualHost:
+    username: 
+    password: 
+    virtualHost: 
     listener:
       simple:
         prefetch: 1
         retry:
           enabled: true
+  ai:
+    dashscope:
+      base-url: 
+      api-key: 
+      chat:
+        options:
+          model: qwen-plus-2025-04-28
+          temperature: 0.7
+        embedding:
+          options:
+            model: text-embedding-v4
 
 file:
   upload:
-    savePath: /xxx/image
+    savePath: 
     relativePath: /image
-    saveArticlePath: /xxx/article
-    relativeArticlePath: /article
-  jwtKeyPath: /xxx/jwtKey.json
+    saveArticlePath: 
+    relativeArticlePath: /file/article
+  jwtKeyPath: jwtKey/jwtKey.json
+
+my:
+  api:
+    hz:
+      id: 
+      key: 
+      w1path: http://124.220.49.230/api/tianqi/tqybip.php
+      w2path: http://124.220.49.230/api/tianqi/tqyb.php

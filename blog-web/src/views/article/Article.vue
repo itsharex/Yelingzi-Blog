@@ -270,7 +270,6 @@ const handleActiveHeading = (heading: any) => {
   readProgress.value = Math.round((heading.index / totalHeadings.value) * 100);
 };
 const handleParentLike = async () => {
-  console.log("父组件接收到点赞事件");
 
   if (isRequesting.value) return;
 

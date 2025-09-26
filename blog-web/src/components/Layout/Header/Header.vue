@@ -19,7 +19,7 @@
             'has-dropdown': item.children,
             'active': isActive(item),
             [item.colorClass]: true
-          }" @mouseenter="handleMouseEnter(item)">
+          }" @mouseenter="handleMouseEnter(item)" v-pio="{ text: `${item.name}`, type: 'link' }">
             <SvgIcon :name="item.icon" class="svg-icon" />
             {{ item.name }}
             <SvgIcon name="icon-xiala" v-if="item.children" class="dropdown-icon svg-icon" />
@@ -27,7 +27,8 @@
 
           <div v-if="item.children" class="dropdown-menu" :class="{ active: activeDropdown === item.name }">
             <a href="javascript:void(0)" v-for="child in item.children" :key="child.path" class="dropdown-item"
-              :class="{ 'active': isChildActive(child) }" @click="handleDropdownItemClick(child)">
+              :class="{ 'active': isChildActive(child) }" @click="handleDropdownItemClick(child)"
+              v-pio="{ text: `${child.name}`, type: 'link' }">
               <SvgIcon :name="child.icon" class="svg-icon" />
               {{ child.name }}
             </a>
@@ -42,10 +43,10 @@
 
         <!-- <LanguageSwitcher></LanguageSwitcher> -->
 
-        <div v-if="!isMobi" v-pio="{ text: `这题可以切换语言哦` }" class="i18n" @mouseleave="handleMouseLeaveI18n"
+        <div v-if="!isMobi" v-pio="{ text: `这题可以切换语言哦` }" class="i18n pointer" @mouseleave="handleMouseLeaveI18n"
           @mouseenter="handleMouseEnterI18n">
 
-          <component :is="i18nIcon" color="#000" class="i18n-icon pointer" v-if="i18nIcon" />
+          <component :is="i18nIcon" color="#000" class="i18n-icon " v-if="i18nIcon" />
           <span class="current-lang">
             {{currentLangList.find(lang => lang.id === useI18n.currentLang)?.text}}
           </span>
@@ -58,11 +59,11 @@
           </div>
         </div>
 
-        <el-tooltip v-if="!isMobi" content="切换主题" placement="bottom" effect="light">
-          <SvgIcon v-if="blogInfo.isDark" size="32" style="color:#fbc90d;" name="icon-Sun" v-pio="{ text: `这里可以切换主题哦` }"
-            class="i18n-icon" @click="handleToggleTheme" />
-          <SvgIcon v-else name="icon-Moon-Star" size="32" style="color:#c2d7e9;" v-pio="{ text: `这里可以切换主题哦` }"
-            class="i18n-icon" @click="handleToggleTheme" />
+        <el-tooltip v-if="!isMobi" content="切换主题" placement="bottom" effect="light" v-pio="{ text: `这里可以切换主题哦` }">
+          <SvgIcon v-if="blogInfo.isDark" size="32" style="color:#c2d7e9;" name="icon-Moon-Star" class="i18n-icon"
+            @click="handleToggleTheme" />
+          <SvgIcon v-else name="icon-Sun" size="32" style="color:#fbc90d;" class="i18n-icon"
+            @click="handleToggleTheme" />
         </el-tooltip>
 
         <!-- <div class="icon-container" @click="openSet">
@@ -78,29 +79,29 @@
           @mouseenter="handleMouseEnterUser">
 
           <div class="user-info">
-            <div v-if="userState.getIsLogin()" class="user-section">
+            <div v-if="userStore.getIsLogin()" class="user-section">
               <div class="avatar" @mouseenter="showDropdown = true">
-                <YlAvatar :src="userInfo.avatar"></YlAvatar>
+                <YlAvatar :src="userInfo.userAvatar"></YlAvatar>
               </div>
               <div class="user-menu" :class="{ active: isDropdownOpenUser }">
                 <div class="dropdown-header">
-                  <ImageWithFallback class="user-avatar" :src="userInfo.avatar" />
+                  <ImageWithFallback class="user-avatar" :src="userInfo.userAvatar" />
                   <div class="user-details text">
                     <span class="username text">{{ userInfo.nickname }}</span>
                   </div>
                 </div>
                 <router-link to="/user/info" class="dropdown-item pointer">
                   <SvgIcon name="icon-geren" />
-                  {{ i18n.personalCenter }}
+                  {{ t('personalCenter') }}
                 </router-link>
                 <div class="dropdown-item pointer" @click="handleLogout">
                   <SvgIcon name="icon-chexiao" />
-                  {{ i18n.logOut }}
+                  {{ t('logOut') }}
                 </div>
               </div>
             </div>
             <div v-else class="avatar pointer" @click="handleLogin">
-              <el-avatar>{{ i18n.login }}</el-avatar>
+              <el-avatar>{{ t('login') }}</el-avatar>
             </div>
           </div>
         </div>
@@ -142,8 +143,8 @@ const blogStore = useBlogStore()
 const blogInfo = blogStore.blogInfo
 const useI18n = useI18nStore()
 const i18n = useI18n.currentConfig
-const userState = useUserStore()
-const userInfo = userState.getUserState()
+const userStore = useUserStore()
+const userInfo = userStore.userInfo
 const chatStore = useChatStore()
 // 响应式数据
 const searchQuery = ref<string>('')
@@ -248,6 +249,12 @@ const menuItems = computed<MenuItem[]>(() => {
           colorClass: 'about-me'
         },
         {
+          name: t('chatAI'),
+          path: '/chatai',
+          icon: 'icon-rengongzhineng',
+          colorClass: 'aichat'
+        },
+        {
           name: t('backManagement'),
           path: 'https://blog.yeling.top/',
           icon: 'icon-diannao',
@@ -294,7 +301,7 @@ const handleCloseSearch = () => {
   isShowSearch.value = false
 }
 const handleLogin = () => {
-  userState.setLastShowWeb(route.path)
+  userStore.setLastShowWeb(route.path)
   router.push('/login')
 }
 
@@ -318,10 +325,13 @@ const handleMouseLeave = () => {
 }
 
 const isActive = (item: MenuItem): boolean => {
+  if (route.path === item.path) {
+    return true
+  }
   if (item.children) {
     return item.children.some(child => isChildActive(child))
   }
-  return route.path === item.path
+  return false
 }
 
 const isChildActive = (child: MenuItem): boolean => {
@@ -329,7 +339,6 @@ const isChildActive = (child: MenuItem): boolean => {
 }
 
 const handleDropdownItemClick = (item: MenuItem) => {
-  console.log(item.path)
   activeDropdown.value = null
   if (item.external) {
     const newWindow = window.open(item.path, '_blank')
@@ -340,7 +349,7 @@ const handleDropdownItemClick = (item: MenuItem) => {
 }
 
 const handleLogout = () => {
-  userState.removeUserState()
+  userStore.removeToken()
   chatStore.removeChat()
   ElMessage.success('已退出登录')
   showDropdown.value = false
@@ -722,7 +731,7 @@ onBeforeUnmount(() => {
     color: var(--color-black);
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-grey);
 
     .search-text {
       font-size: 0.9em;

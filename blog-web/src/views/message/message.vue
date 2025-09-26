@@ -117,7 +117,7 @@ const initializePositions = async () => {
       })
     }
     initialized.value = true;
-  }, 120)
+  }, 300)
 }
 
 onMounted(async () => {
@@ -174,7 +174,7 @@ const send = async () => {
 
 
   let message = {
-    userAvatar: userState.userInfo.avatar,
+    userAvatar: userState.userInfo.userAvatar,
     nickname: userState.userInfo.nickname,
     content: content.value,
   };

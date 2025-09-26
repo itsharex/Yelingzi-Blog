@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 //注册接口
 export const userRegisterService = (row: { email: string; password: string; verifyCode: string }) => {
-  return request.post('/api/user/reg', row)
+  return request.post('/api/reg', row)
 }
 
 //登录接口
@@ -17,7 +17,7 @@ export const userLoginService = (row: {
 
 //登录接口
 export const userVerifyCodeLoginService = (row: { email: string; verifyCode: string }) => {
-  return request.post('/api/user/login/email', row)
+  return request.post('/api/login/email', row)
 }
 
 //获取用户的基本信息
@@ -41,8 +41,8 @@ export const setUserInfoService = (row: {
   userAvatar: string
 }) => request.post('/api/user/info/update', row)
 
-//获取验证码
-export const getEmailVerifyCodeService = (row: { email: string }) =>
+//获取注册验证码
+export const getRegEmailVerifyCodeService = (row: { email: string }) =>
   request.get('/api/email/reg', {
     params: {
       email: row.email,
@@ -57,9 +57,9 @@ export const getLoginEmailVerifyCodeService = (row: { email: string }) =>
     },
   })
 
-export const viewService = () => request.get('/api/view')
-
-export const userViewService = () => request.get('/api/user/view')
+export const viewService = (device: string) => request.get('/api/view', {
+  headers: { 'x-host': device }
+})
 
 //获取忘记密码验证码
 export const getForgetEmailVerifyCodeService = (row: { email: string }) =>

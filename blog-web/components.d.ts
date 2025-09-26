@@ -52,6 +52,8 @@ declare module 'vue' {
     Header: typeof import('./src/components/Layout/Header/Header.vue')['default']
     I18nProvider: typeof import('./src/components/Language/I18nProvider.vue')['default']
     ImageList: typeof import('./src/components/Image/ImageList.vue')['default']
+    ImageListMapper: typeof import('./src/components/Image/ImageListMapper.vue')['default']
+    ImageMapperComponent: typeof import('./src/components/Image/ImageMapperComponent.vue')['default']
     ImageWithFallback: typeof import('./src/components/Image/ImageWithFallback.vue')['default']
     LanguageSwitcher: typeof import('./src/components/Language/LanguageSwitcher.vue')['default']
     LImg: typeof import('./src/components/Image/LImg.vue')['default']

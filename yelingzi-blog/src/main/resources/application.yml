@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: yelingzi-blog
+  servlet:
+    multipart:
+      max-file-size: 18MB
+      max-request-size: 10MB
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: 10000ms
+          max-idle: 8
+          min-idle: 0
+  mail:
+    host: smtp.qq.com
+    username: 
+    password: 
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+  profiles:
+    active: dev
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+app:
+  redis:
+    init-data:
+      enabled: true
+      key-prefix: "app:"
+
+logging:
+  config: classpath:logback.xml
+  level:
+    org:
+      springframework:
+        ai:
+          chat:
+            client:
+              advisor: DEBUG
+

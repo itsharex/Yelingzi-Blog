@@ -18,18 +18,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, type PropType } from 'vue';
 import proButton from "@/components/Button/proButton.vue";
 import { ElMessage } from 'element-plus';
-import { sendSingleImageService, sendMessageService } from '@/api/chat';
+import { sendSingleImageService, sendSingleMessageService } from '@/api/chat';
 import { useUserStore } from '@/stores';
-import type { ChatMessage } from '@/type/chatType';
+import type { Chat} from '@/type/chatType';
 
 const userStore = useUserStore()
 const content = ref('')
 const fileInputRef = ref<HTMLInputElement>();
 const previewUrl = ref<string>();
 const imageFile = ref<File>();
+
+const props = defineProps({
+  chating: {
+    type: Object as PropType<Chat>,
+    required: true
+  },
+})
 
 const emit = defineEmits<{
   scrollToBottom: []
@@ -80,7 +87,7 @@ const send = async () => {
     return
   }
 
-  await sendMessageService({ type: 'single', message: content.value })
+  await sendSingleMessageService({ nickname: 'single', message: content.value, toUser: props.chating.nickname })
   content.value = ''
   onSendSuccess()
 }

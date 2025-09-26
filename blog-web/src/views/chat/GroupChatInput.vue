@@ -1,4 +1,17 @@
 <template>
+  <div class="emoji-container" ref="emojiContainerRef">
+    <!-- 使用 v-show 而不是 v-if，以便保持组件状态 -->
+    <div class="emoji-picker-wrapper" v-show="emojiVisible">
+      <ImageListMapper @select="handleEmojiSelect" />
+    </div>
+  </div>
+  <div class="input-header">
+    <!-- 包裹表情图标和列表的容器 -->
+    <div class="input-icon" tabindex="0">
+      <SvgIcon size="20" name="icon-biaoqing" class="icon-emoji pointer" @click="opeEmojiSelect">
+      </SvgIcon>
+    </div>
+  </div>
   <div class="input-content">
     <div class="chip-wrapper">
       <div v-for="(input, idx) in inputList" :key="idx" class="chip pointer" :class="{ active: selectedIndex === idx }"
@@ -18,7 +31,7 @@
 import { ref } from 'vue';
 import YlButton from '@/components/Button/YlButton.vue';
 import type { ChatMessage } from '@/types/chatType';
-import { sendMessageService } from '@/api/chat';
+import { sendEmojiMessageService, sendMessageService } from '@/api/chat';
 import { useUserStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 
@@ -36,6 +49,7 @@ const inputList = ref(["大家好吖，喵！",
   "摸鱼ing，勿扰~",
   "qwq",
   "ovo"])
+const emojiVisible = ref(false);
 
 const select = (idx: number, input: string) => {
   if (selectedIndex.value == idx) {
@@ -64,12 +78,71 @@ const send = async () => {
 
 
 }
+const opeEmojiSelect = () => {
+  if (emojiVisible.value) {
+    emojiVisible.value = false
+    return
+  } else {
+    emojiVisible.value = true
+  }
+
+}
+
+const nonEmojiSelect = () => {
+  emojiVisible.value = false
+}
+
+const handleEmojiSelect = async (emoji: string) => {
+
+  emojiVisible.value = false
+  await sendEmojiMessageService({ type: 'group', message: emoji }, userStore.deviceId)
+  onSendSuccess()
+}
+const onSendSuccess = () => {
+  emit('scrollToBottom')
+}
+defineExpose({
+  nonEmojiSelect
+})
 </script>
 
 <style lang="scss" scoped>
+.emoji-container {
+  position: relative;
+}
+
+.emoji-picker-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 242px;
+  top: -250px;
+  left: 0;
+  z-index: 1000;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.input-header {
+  height: 23px;
+  display: flex;
+  gap: 12px;
+}
+
+.input-icon {
+  &:hover {
+    color: var(--color-blue);
+  }
+
+  &:hover SvgIcon {
+    filter: drop-shadow(0 0 2px var(--color-blue));
+  }
+}
+
 .input-content {
   width: 100%;
-  height: 99px;
+  height: 78px;
 }
 
 .chip-wrapper {

@@ -34,11 +34,14 @@ export interface LocalConfig {
   accessInfo: string;
   date: string;
   city: string;
-  browser: string;
-  platform: string;
-  temperature: string;
-  weather: string;
-  wind: string;
+  temperatureRange: string,
+  weather: string,
+  wind: string,
+  humidity: string,
+  pressure: string,
+  precipitation: string,
+  feelsLike: string,
+  windSpeed: string,
   online: string;
   send: string;
   messageInput: string;
@@ -51,4 +54,5 @@ export interface LocalConfig {
   user: string;
   chatRoom: string;
   openSource: string;
+  chatAI: string;
 }

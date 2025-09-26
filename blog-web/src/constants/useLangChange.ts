@@ -8,6 +8,7 @@ export const useLangChange = (callback: () => void) => {
   // 监听语言变化事件
   const handleLangChange = () => {
     callback()
+
   }
 
   onMounted(() => {

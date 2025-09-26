@@ -20,7 +20,7 @@
         </div>
 
         <!-- 说说内容 -->
-        <div @click="toTalkId(talk.id)" v-pio="{ text: `这条说说`, type: 'look' }">
+        <div class="pointer" @click="toTalkId(talk.id)" v-pio="{ text: `这条说说`, type: 'look' }">
           <div class="talk-title" v-html="talk.title">
           </div>
           <div class="talk-content" v-html="talk.content">
@@ -28,7 +28,7 @@
         </div>
 
         <!-- 说说图片 -->
-        <div class="talk-image">
+        <div class="talk-image pointer">
           <ImageList v-if="talk.imageUrl.length > 1" :image-layout="8" :image-list="talk.imageUrl"></ImageList>
           <ImageList v-else :image-layout="14" :image-list="talk.imageUrl"></ImageList>
         </div>
