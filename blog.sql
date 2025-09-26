@@ -125,7 +125,7 @@ CREATE TABLE `article_category` (
   `category_name` varchar(45) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(11) NOT NULL DEFAULT '0',
-  `nickname` varchar(16) NOT NULL DEFAULT '',
+  `nickname` varchar(20) NOT NULL DEFAULT '',
   `is_del` int(11) NOT NULL DEFAULT '0',
   `article_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -157,8 +157,8 @@ CREATE TABLE `article_comment` (
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `state` tinyint(1) NOT NULL DEFAULT '0',
   `like_count` int(11) NOT NULL DEFAULT '0',
-  `to_nickname` varchar(16) DEFAULT NULL,
-  `user_nickname` varchar(16) NOT NULL,
+  `to_nickname` varchar(20) DEFAULT NULL,
+  `user_nickname` varchar(20) NOT NULL,
   `to_id` int(11) DEFAULT NULL,
   `user_avatar` varchar(64) NOT NULL,
   `reply_count` int(11) NOT NULL DEFAULT '0',
@@ -239,7 +239,7 @@ CREATE TABLE `article_tag` (
   `article_count` int(11) NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(11) NOT NULL DEFAULT '0',
-  `nickname` varchar(16) NOT NULL DEFAULT '',
+  `nickname` varchar(20) NOT NULL DEFAULT '',
   `is_del` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='文章标签';
@@ -310,6 +310,39 @@ LOCK TABLES `chat` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `chat_ai`
+--
+
+DROP TABLE IF EXISTS `chat_ai`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `chat_ai` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(45) NOT NULL,
+  `role` varchar(45) NOT NULL,
+  `content` text NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `chat_ai_user_link`
+--
+
+DROP TABLE IF EXISTS `chat_ai_user_link`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `chat_ai_user_link` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(45) NOT NULL,
+  `user_ident` varchar(45) NOT NULL,
+  `description` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `classestable`
 --
 
@@ -358,7 +391,7 @@ CREATE TABLE `friend` (
   `url` varchar(128) NOT NULL,
   `recommend_status` int(11) NOT NULL DEFAULT '0' COMMENT '推荐状态',
   `user_id` int(11) NOT NULL,
-  `email` varchar(45) NOT NULL,
+  `nickname` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='友情链接';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -475,7 +508,7 @@ DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` varchar(255) NOT NULL,
-  `nickname` varchar(16) NOT NULL,
+  `nickname` varchar(20) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` varchar(45) NOT NULL,
   `ip_location` varchar(45) NOT NULL DEFAULT '未知',
@@ -559,13 +592,13 @@ DROP TABLE IF EXISTS `talk_comment`;
 CREATE TABLE `talk_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_nickname` varchar(16) NOT NULL,
+  `user_nickname` varchar(20) NOT NULL,
   `user_avatar` varchar(64) NOT NULL,
   `content` varchar(512) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `to_id` int(11) DEFAULT NULL,
-  `to_nickname` varchar(16) DEFAULT NULL,
+  `to_nickname` varchar(20) DEFAULT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `reply_count` int(11) NOT NULL DEFAULT '0',
   `state` int(11) NOT NULL DEFAULT '0',
