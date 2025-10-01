@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Layout from '@/views/Layout/Layout.vue'
-import FixedLayout from '@/views/Layout/FixedLayout.vue'
+import Layout from '@/components/Layout/Layout.vue'
+import FixedLayout from '@/components/Layout/FixedLayout.vue'
 import Home from '@/views/home/Home.vue'
 import TalkList from '@/views/Talk/TalkList.vue'
 import Archive from '@/views/archive/Archive.vue'
@@ -140,10 +140,6 @@ const route = [
       },
     ],
   },
-  {
-    path: '/test',
-    component: () => import('@/components/Clock/particleClock.vue')
-  }
 ]
 
 const fixedRoute = [

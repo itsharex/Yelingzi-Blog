@@ -184,7 +184,6 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
   border-radius: 10px;
   overflow: hidden;
   background: linear-gradient(to bottom right, #fce4ec, #ffffff);

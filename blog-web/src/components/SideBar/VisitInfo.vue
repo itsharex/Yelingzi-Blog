@@ -14,7 +14,7 @@
           <div class="weather-label">
             <SvgIcon :name="item.icon" />{{ t(item.title) }}：
           </div>
-          <div class="weather-value text">{{ item.value }}</div>
+          <div class="weather-value">{{ item.value }}</div>
         </div>
       </div>
     </div>
@@ -137,12 +137,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .weather-info {
-  margin-top: 20px;
   position: relative; // 必须，作为绝对定位图标的父容器
   display: flex;
   flex-direction: column;
   background-image: linear-gradient(#ffffff00, #caf3f4 50%, #b4f6e2 100%);
-  margin-bottom: 20px;
   border-radius: 10px;
   overflow: hidden; // 防止图标超出圆角
 
@@ -180,7 +178,6 @@ onMounted(() => {
       display: flex;
       align-items: center;
       text-align: left;
-      font-weight: bold;
     }
 
     .weather-label svg {

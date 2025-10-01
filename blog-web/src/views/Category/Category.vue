@@ -5,7 +5,7 @@
 
       <!-- 分类导航 -->
       <div class="categories-nav">
-        <div v-for="category in categories" :key="category.categoryName" class="category-tab"
+        <div v-for="category in categories" :key="category.categoryName" class="category-tab pointer"
           :class="{ active: activeCategory === category.categoryName }"
           @click="scrollToCategory(category.categoryName)">
           <SvgIcon name="icon-fenlei" />
@@ -24,7 +24,9 @@
             <span class="post-count">{{ item.posts.length }} 篇文章</span>
           </h2>
 
-          <DividerLine margin="0px" symbol="2"></DividerLine>
+          <div :ref="(el) => { if (el) dividerRefs[item.categoryName] = el as HTMLElement }">
+            <DividerLine margin="0px" symbol="2"></DividerLine>
+          </div>
 
           <div class="posts-list">
             <div v-for="post in item.posts" :key="post.id" class="post-item" @click="goToPost(post.id)"
@@ -52,9 +54,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, onBeforeUnmount, inject, type Ref, type ComponentPublicInstance } from 'vue'
-import { useRouter } from 'vue-router'
-import CommonLayout from '../Layout/CommonLayout.vue'
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
+import CommonLayout from '@/components/Layout/CommonLayout.vue'
 import bgImg from '@/assets/images/bg-article.jpg'
 import DividerLine from '@/components/Hr/DividerLine.vue'
 import { getDate, getMonth, getYear } from '@/utils/common'
@@ -68,13 +69,12 @@ interface Category {
   posts: Archives[]
 }
 
-const router = useRouter()
+
 const categories = reactive<Category[]>([])
-const layoutRef = inject<Ref<HTMLElement | null>>('scrollContainer', ref<HTMLElement | null>(null));
 const activeCategory = ref<string | null>(null)
 const loading = ref(false)
 const categoryRefs = reactive<Record<string, HTMLElement>>({})
-
+const dividerRefs = reactive<Record<string, HTMLElement>>({})
 
 // 跳转到文章
 const goToPost = (id: number) => {
@@ -83,46 +83,24 @@ const goToPost = (id: number) => {
 
 // 滚动到分类
 const scrollToCategory = (categoryName: string) => {
-
   activeCategory.value = categoryName;
 
-  const element = categoryRefs[categoryName];
+  const divider = dividerRefs[categoryName];
+  if (!divider) return;
 
-  if (!element) return;
+  const rect = divider.getBoundingClientRect();
+  const scrollTop = window.scrollY + rect.bottom - 200;
 
-  // 计算元素在容器中的位置
-  const getScrollPosition = () => {
-    if (layoutRef?.value) {
-      const container = layoutRef.value;
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      return elementRect.top - containerRect.top + container.scrollTop - 100;
-    }
-    return element.offsetTop - 100;
-  };
-
-  // 执行滚动
-  if (layoutRef?.value) {
-    // 自定义容器滚动
-    layoutRef.value.scrollTo({
-      top: getScrollPosition(),
-      behavior: 'smooth'
-    });
-  } else {
-    // 默认窗口滚动
-    window.scrollTo({
-      top: getScrollPosition(),
-      behavior: 'smooth'
-    });
-  }
+  window.scrollTo({
+    top: scrollTop,
+    behavior: 'smooth',
+  });
 };
 
 // 处理滚动
 const handleScroll = () => {
   // 获取当前滚动位置（容器或窗口）
-  const scrollPosition = layoutRef?.value
-    ? layoutRef.value.scrollTop + 200  // 增加80px偏移量适配导航栏高度
-    : window.scrollY + 200;
+  const scrollPosition = window.scrollY + 200;
 
   // 遍历所有分类检测激活状态
   for (const category of categories) {
@@ -133,19 +111,10 @@ const handleScroll = () => {
     let elementTop = 0;
     let elementBottom = 0;
 
-    if (layoutRef?.value) {
-      // 容器内相对位置计算
-      const container = layoutRef.value;
-      const elementRect = element.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      elementTop = elementRect.top - containerRect.top + container.scrollTop;
-      elementBottom = elementTop + element.offsetHeight;
-    } else {
-      // 窗口位置计算
-      const elementRect = element.getBoundingClientRect();
-      elementTop = elementRect.top + window.scrollY;
-      elementBottom = elementRect.bottom + window.scrollY;
-    }
+    // 窗口位置计算
+    const elementRect = element.getBoundingClientRect();
+    elementTop = elementRect.top + window.scrollY;
+    elementBottom = elementRect.bottom + window.scrollY;
 
     // 判断当前滚动位置是否在元素可视范围内
     if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
@@ -183,7 +152,7 @@ onMounted(async () => {
   await fetchCategories();
 
   // 根据容器类型添加滚动监听
-  const scrollElement = layoutRef?.value || window;
+  const scrollElement = window.document;
   scrollElement.addEventListener('scroll', handleScroll);
 
   // 初始化检测一次
@@ -191,7 +160,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  const scrollElement = layoutRef?.value || window;
+  const scrollElement = window.document;
   scrollElement.removeEventListener('scroll', handleScroll);
 
 })

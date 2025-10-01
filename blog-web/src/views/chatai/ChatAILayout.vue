@@ -5,8 +5,13 @@
 
     <div class="container">
       <!-- 左侧历史记录 -->
-      <div class="container-left">
-        <History :session-list="sessionList" :session-id="sessionId" />
+      <div class="container-left" :class="{ active: isShowHistory }">
+        <History :session-list="sessionList" :session-id="sessionId" v-on:hide-history="toggleHistory" />
+      </div>
+
+      <div class="history-header">
+        <ImageWithFallback class="logo" :src="Logo" />
+        <SvgIcon name="icon-sidebarcebianlan" size="32" class="header-icon pointer" @click="toggleHistory" />
       </div>
 
       <!-- 右侧：要么空态、要么聊天态 -->
@@ -41,6 +46,8 @@ import { addSessionIdService, getHistoryBySessionService, getSessionListService,
 import { useUserStore } from '@/stores';
 import { useRoute } from 'vue-router';
 import { debounce } from 'lodash-es';
+import ImageWithFallback from '@/components/Image/ImageWithFallback.vue';
+import Logo from '@/assets/images/yeling.jpg'
 
 /* ---------------- 数据 ---------------- */
 const userStore = useUserStore();
@@ -53,8 +60,14 @@ const done = ref(false);
 const abortController = ref<AbortController | null>(null);
 const isTyping = ref(false);
 const typingChatId = ref<string | number | null>(null);
+const isShowHistory = ref(true);
 
 /* ---------------- 方法 ---------------- */
+//转换显示与隐藏历史记录
+const toggleHistory = () => {
+  isShowHistory.value = !isShowHistory.value;
+};
+
 // 加载会话列表
 const loadSessionList = async () => {
   try {
@@ -154,10 +167,6 @@ const handleReceive = async (text: string, model: string) => {
   });
 
   typingChatId.value = assistantMessageId;
-
-  console.log('historyList:', historyList.value.at(-1));
-  console.log('typeId:', typingChatId.value);
-  console.log('isTypeing:', isTyping.value);
 
   const messageIndex = historyList.value.length - 1;
   let fullContent = '';
@@ -270,16 +279,50 @@ onUnmounted(() => {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 /* 左侧固定 */
 .container-left {
   padding-top: 30px;
-  width: 260px;
+  width: 0px;
   flex-shrink: 0;
   background-color: var(--grey-1);
   border-right: 1px solid #e4e7ed;
   overflow-y: auto;
+  transition: all 0.3s ease;
+  z-index: 10;
+
+  &.active {
+    width: 260px;
+  }
+
+}
+
+.history-header {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 9;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  gap: 10px;
+  // background: ;
+
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-icon {
+    color: #909399;
+
+    &:hover {
+      color: #409eff;
+    }
+  }
 }
 
 /* 聊天态：900 宽居中 */
@@ -336,5 +379,27 @@ onUnmounted(() => {
   padding: 8px 10px;
   border: 1px solid #e4e7ed;
   border-radius: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .container-center {
+    width: 100%;
+  }
+
+  .input-wrapper-empty {
+    width: 90%;
+  }
+
+  .container-left {
+    width: 260px;
+    left: -260px;
+    position: absolute;
+    height: 100%;
+
+    &.active {
+      width: 260px;
+      transform: translateX(260px);
+    }
+  }
 }
 </style>

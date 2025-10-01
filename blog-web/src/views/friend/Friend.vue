@@ -63,7 +63,7 @@ import { ElMessage, type FormInstance } from 'element-plus'
 import FriendCard from './FriendCard.vue'
 import FriendInfoSection from './FriendInfoSection.vue'
 import proButton from '@/components/Button/proButton.vue'
-import CommonLayout from '../Layout/CommonLayout.vue'
+import CommonLayout from '@/components/Layout/CommonLayout.vue'
 import { useResize } from '@/utils/common'
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue'
 import friendLetterBiLi from '@/assets/images/friendLetterBiLi.png'
@@ -330,23 +330,22 @@ onUnmounted(() => document.removeEventListener('mousedown', onMouseDown))
   margin: 0px auto;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 767px) {
   .form-wrap {
     width: auto;
   }
 
   .before-img {
-    width: auto;
+    width: 100%;
   }
 
   .after-img {
-    width: auto;
+    width: 100%;
   }
-}
 
-@media screen and (max-width: 500px) {
   .friend-main {
-    padding: 40px 15px;
+    padding: 40px 0px;
   }
+
 }
 </style>

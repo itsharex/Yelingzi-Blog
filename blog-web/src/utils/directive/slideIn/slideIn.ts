@@ -1,4 +1,4 @@
-import { type App } from "vue";
+import { nextTick, type App } from "vue";
 
 const OFFSET = 100;
 const DURATION = 500;
@@ -22,11 +22,12 @@ const belowViewport = (el: Element): boolean => {
 
 export default (app: App) => {
   app.directive("slide-in", {
-    mounted(el: Element) {
+    async mounted(el: Element) {
 
-      if (!belowViewport(el)) {
-        return;
-      }
+
+      // if (!belowViewport(el)) {
+      //   return;
+      // }
 
       // 实现上滑动画
       const animation = el.animate(

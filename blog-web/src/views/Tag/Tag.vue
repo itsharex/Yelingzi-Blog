@@ -2,7 +2,7 @@
 
   <!-- 使用 CSS Grid 布局 -->
   <div class="article-grid">
-    <div class="article-item" v-for="article of articleList" :key="article.id">
+    <div class="article-item" v-for="article of props.list" :key="article.id">
       <div class="article-cover">
         <router-link :to="`/article/${article.id}`">
           <ImageWithFallback class="cover" :src="article.articleCover" />
@@ -23,10 +23,10 @@
         </div>
         <div class="article-meta">
 
-          <router-link :to="`/category`" class="category">
+          <div @click="router.push('/category')" class="category">
             <SvgIcon name="icon-fenlei1" style="color: #FFD43B;" />
             {{ article.category.categoryName }}
-          </router-link>
+          </div>
           <span class="time">
             <SvgIcon name="icon-rili1" />
             {{ formatDate(article.createTime) }}
@@ -40,40 +40,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { type PropType } from 'vue';
 import { formatDate } from '@/utils/common'
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue';
-import { getArticleListByTagService } from '@/api/article';
+import { useRouter } from 'vue-router';
+import type { Tag } from '@/types/article';
+import type { ArticleCondition } from '@/types/tag';
 
-interface Tag {
-  id: number;
-  tagName: string;
-}
+const router = useRouter()
 
-interface Category {
-  id: number;
-  categoryName: string;
-}
-
-interface ArticleCondition {
-  id: number;
-  articleCover: string;
-  title: string;
-  category: Category;
-  tagList: Tag[];
-  createTime: string;
-  content: string
-}
-
-interface Props {
-  tagName: string
-  id: number
-}
-const props = withDefaults(defineProps<Props>(), {
-  tagName: '',
-  id: 0,
+const props = defineProps({
+  list: {
+    type: Array as PropType<ArticleCondition[]>,
+    required: true
+  }
 })
-const articleList = ref<ArticleCondition[]>([])
 const emit = defineEmits(['update:tag'])
 
 // 触发事件通知父组件
@@ -81,35 +62,12 @@ const emitTagChange = (tag: Tag) => {
   emit('update:tag', tag)
 }
 
-// 监听 id 变化并刷新数据
-watch(
-  () => props.id,
-  (newId) => {
-    if (newId > 0) {
-      getArticle()
-    }
-  }
-)
 
-const getArticle = async () => {
-  const res = await getArticleListByTagService(props.id)
-  articleList.value = res.data.data
-}
 
-onMounted(() => {
-  getArticle()
-});
 </script>
 
 <style lang="scss" scoped>
-.page-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 .article-grid {
-  min-height: 350px;
   display: grid;
   gap: 15px;
   grid-template-columns: repeat(1, 1fr);

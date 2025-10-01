@@ -30,11 +30,12 @@ const props = withDefaults(defineProps<Props>(), {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; // 改用视窗单位
-  height: 80vh;
+  width: 100vw;
+  height: 70vh;
   z-index: -9;
   animation-duration: 1s;
   animation-fill-mode: both;
+  pointer-events: none;
 }
 
 .error-fallback {
@@ -42,15 +43,15 @@ const props = withDefaults(defineProps<Props>(), {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; // 继承父容器高度
-  display: flex; // 使用 flex 布局
+  height: 100%;
+  display: flex;
   background: #f5f5f5;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block; // 消除图片默认间隙
+    display: block;
     filter: grayscale(80%) blur(1px);
     opacity: 0.9;
   }

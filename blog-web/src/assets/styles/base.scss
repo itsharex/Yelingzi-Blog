@@ -1,40 +1,9 @@
-// body {
-//   cursor: url('@/assets/images/cursors/link.cur'), auto !important; // move cursor to assets/images/cursor/default.png
-// }
-
-// // 定义（在全局样式中定义）
-// @font-face {
-//   font-family: 优设标题黑;
-//   src: url('http://cdn.snows-l.site/blog/fonts/优设标题黑.ttf');
-// }
-// // @font-face {
-// //   font-family: 华文行楷;
-// //   src: url('http://cdn.snows-l.site/blog/fonts/STXINGKA.TTF');
-// // }
-// @font-face {
-//   font-family: DSDIGI;
-//   // src: url('http://cdn.snows-l.site/blog/fonts/DSDIGI.TTF');
-//   src: url('@/assets/font/fontFamily/DSDIGI.TTF');
-// }
-// @font-face {
-//   font-family: 喵喵体;
-//   src: url('@/assets/font/fontFamily/喵喵体.ttf');
-// }
-// @font-face {
-//   font-family: 电影旁白体;
-//   src: url('http://cdn.snows-l.site/blog/fonts/电影旁白体.ttf');
-// }
-// @font-face {
-//   font-family: 菜单体;
-//   src: url('http://cdn.snows-l.site/blog/fonts/菜单体.ttf');
-// }
-
 /* 自定义整个滚动条 */
 ::-webkit-scrollbar {
   // width: 2px; /* 设置滚动条的宽度 */
   // height: 2px;
   width: 0;
-  height: 0; /* 隐藏滚动条 */
+  height: 0;
   background-color: transparent; /* 背景透明 */
 }
 

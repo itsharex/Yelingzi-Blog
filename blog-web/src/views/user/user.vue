@@ -87,4 +87,11 @@ onMounted(() => {
   min-height: 600px;
   border-radius: 30px;
 }
+
+@media (max-width: 767px) {
+  .el-aside {
+    width: 0;
+    border-right: none;
+  }
+}
 </style>

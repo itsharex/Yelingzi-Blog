@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import vueDanmaku from "vue3-danmaku";
-import { nextTick, onMounted, reactive, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { ElMessage } from "element-plus";
 import avatar from '@/assets/images/avatar1.jpg'
 import { formatDate } from "@/utils/common";
@@ -117,7 +117,7 @@ const initializePositions = async () => {
       })
     }
     initialized.value = true;
-  }, 300)
+  }, 500)
 }
 
 onMounted(async () => {

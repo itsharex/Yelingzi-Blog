@@ -1,13 +1,4 @@
-html,
-body {
-  height: 100vh;
-  overflow: hidden;
-  font-family: 优设标题黑;
-}
-body {
-  position: relative;
-}
-#pio-container {
+/* #pio-container {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -16,7 +7,7 @@ body {
 #pio {
   height: 260px;
   vertical-align: middle;
-}
+} */
 #app {
   position: absolute;
   bottom: 0;
@@ -42,7 +33,7 @@ body {
   margin-bottom: 20px;
   width: 340px;
   height: 340px;
-  /* background-image: url('/loading.gif'); */
+  background-image: url('/loading.gif');
 }
 @-webkit-keyframes ball-beat {
   50% {

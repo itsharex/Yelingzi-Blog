@@ -43,7 +43,7 @@ import { getDateDiff, numberToBoolean } from "@/utils/common"
 import { onMounted, defineAsyncComponent, ref } from "vue";
 import { useUserStore } from "@/stores";
 import Comment from '@/components/Comment/Comment.vue';
-import CommonLayout from '../Layout/CommonLayout.vue';
+import CommonLayout from '@/components/Layout/CommonLayout.vue';
 import ImageList from '@/components/Image/ImageList.vue';
 import { addTalkLikeService, delTalkLikeService, getTalkByIdService, getTalkLikeService } from '@/api/talk';
 import { ElMessage } from 'element-plus';

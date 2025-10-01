@@ -2,7 +2,7 @@
   <div ref="brandRef" class="brand-container">
     <div class="brand">
       <!-- 标题 -->
-      <p class="artboard">{{ t('nickname') }}</p>
+      <p class="artboard" :class="{ active: artboard }">{{ t('blogName') }}</p>
       <!-- 打字机 -->
       <Typeit v-if="yiYan.hitokotoList.length > 0" :data="yiYan.hitokotoList" :speed="100" :delete-speed="50"
         :pause-time="3000" />
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, inject, type Ref } from 'vue'
+import { ref, onMounted, inject, type Ref, nextTick } from 'vue'
 import { t } from '@/utils/i18n'
 import Typeit from "@/components/Typeit/Typeit.vue"
 import WaveOne from "@/components/Waves/WaveOne.vue"
@@ -25,7 +25,7 @@ import { useYiYanStore } from '@/stores/modules/yiyan'
 
 const yiYan = useYiYanStore()
 const brandRef = ref<HTMLElement>()
-const layoutRef = inject<Ref<HTMLElement | null>>('scrollContainer', ref<HTMLElement | null>(null));
+const artboard = ref(false)
 
 // 生命周期
 // 初始加载和定期刷新
@@ -46,34 +46,21 @@ onMounted(async () => {
 const scrollDown = () => {
   if (!brandRef.value) return
 
-  // 获取组件底部位置
   const element = brandRef.value
   const elementRect = element.getBoundingClientRect()
   const absoluteBottom = elementRect.bottom + window.scrollY
 
-  // 判断是否存在自定义滚动容器
-  if (layoutRef?.value) {
-    // 自定义容器的滚动逻辑
-    const container = layoutRef.value
-    const containerScrollTop = container.scrollTop
-    const elementBottomRelative = elementRect.bottom + containerScrollTop - container.offsetTop - 74
-
-    container.scrollTo({
-      top: elementBottomRelative,
-      behavior: 'smooth'
-    })
-  } else {
-    // 默认窗口滚动逻辑
-    window.scrollTo({
-      behavior: "smooth",
-      top: absoluteBottom
-    })
-  }
+  window.scrollTo({
+    behavior: "smooth",
+    top: absoluteBottom - 30
+  })
 }
+
+onMounted(() => {
+  nextTick(() => artboard.value = true)
+})
+
 </script>
-
-
-
 
 
 <style lang="scss" scoped>
@@ -94,18 +81,26 @@ const scrollDown = () => {
   flex-direction: column;
   position: fixed;
   z-index: -1;
+  pointer-events: none;
 
   .artboard {
-    font-family: "Fredericka the Great", Mulish, -apple-system, "PingFang SC", "Microsoft YaHei",
+    font-family: 'CustomFont', "Fredericka the Great", Mulish, -apple-system, "PingFang SC", "Microsoft YaHei",
       sans-serif;
-    font-size: 4em;
+    font-size: 5em;
     line-height: 1.2;
-    animation: titleScale 1s;
+    color: var(--color-pink);
+    letter-spacing: -1em;
+    opacity: 0;
+    // animation: titleScale 1s;
   }
 
   .title {
     letter-spacing: 0.1em;
   }
+}
+
+.active {
+  animation: unfoldSpacing 1.2s ease-out forwards;
 }
 
 .easy-typed-cursor {
@@ -127,13 +122,11 @@ const scrollDown = () => {
 
 @media (max-width: 767px) {
   .brand-container {
-    padding: 3rem 0.5rem 0;
+    padding: 3rem 0 0;
   }
-}
 
-@media (min-width: 760px) {
-  .title {
-    font-size: 1.5rem;
+  .brand .artboard {
+    font-size: 3.5em;
   }
 }
 
@@ -160,6 +153,18 @@ const scrollDown = () => {
   }
 
   100% {
+    opacity: 1;
+  }
+}
+
+@keyframes unfoldSpacing {
+  0% {
+    letter-spacing: -1em;
+    opacity: 0;
+  }
+
+  100% {
+    letter-spacing: normal;
     opacity: 1;
   }
 }

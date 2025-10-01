@@ -46,6 +46,7 @@ onMounted(() => {
   z-index: -9;
   background-color: #363636;
   overflow: hidden;
+  pointer-events: none;
 
   .item {
     @include m.absolute;

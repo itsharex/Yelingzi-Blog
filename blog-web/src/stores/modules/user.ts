@@ -28,6 +28,9 @@ export const useUserStore = defineStore(
     const isFirstView = ref(true)
     const deviceId = ref('')
 
+    //文章主题
+    const previewTheme = ref('')
+
 
     const removeToken = () => {
       accessToken.value = ''
@@ -99,6 +102,10 @@ export const useUserStore = defineStore(
       viewDate.value = date
     }
 
+    const setPreviewTheme = (theme: string) => {
+      previewTheme.value = theme
+    }
+
     return {
       removeToken,
       removeUserState,
@@ -109,7 +116,8 @@ export const useUserStore = defineStore(
       setTokens,
       setViewDate,
       checkIsFirstView,
-
+      setPreviewTheme,
+      previewTheme,
       webSiteInfo,
       lastShowWeb,
       getUserStateCombined,

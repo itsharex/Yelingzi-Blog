@@ -128,4 +128,10 @@ setTimeout(typing, 500)
     opacity: 0;
   }
 }
+
+@media (max-width: 768px) {
+  .type-container {
+    font-size: 2.1rem;
+  }
+}
 </style>

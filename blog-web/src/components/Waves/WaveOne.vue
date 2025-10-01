@@ -29,9 +29,11 @@
   min-height: 3.125rem;
   max-height: 9.375rem;
   z-index: 1;
+  overflow-x: hidden;
 }
 
 .parallax {
+
   .use {
     animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
 

@@ -49,7 +49,7 @@ const articleList = ref<Article[]>([])
 const emit = defineEmits(['navigate'])
 
 const handleClick = (id: number) => {
-  emit('navigate', id)  // 触发导航事件
+  emit('navigate', id)
 }
 const fetchData = async (search: string) => {
   const res = await searchArticleListService(search)

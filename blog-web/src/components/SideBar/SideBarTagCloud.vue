@@ -202,7 +202,6 @@ onUnmounted(() => {
 .tag-wall {
   padding: 16px;
   background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
-  margin-top: 20px;
   border-radius: 10px;
 
   .tag-text {

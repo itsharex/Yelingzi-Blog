@@ -40,7 +40,7 @@
         分享
       </button>
       <div class="share-menu" v-show="showShare">
-        <button class="share-item" @click="copyLink">
+        <button class="share-item pointer" @click="copyLink">
           <component :is="Icon" style="width: 16px;height: 16px;" />
           复制链接
         </button>
@@ -188,12 +188,13 @@ const closeShareMenu = () => {
     transition: all 0.3s ease;
 
     &.like {
-      background: var(--hover-bg);
+      border: 1px solid var(--color-grey);
       color: var(--text-secondary);
 
       &.active {
-        background: va.$primary;
+        background: var(--color-red);
         color: white;
+        border: none;
       }
 
       &:hover {
@@ -252,7 +253,6 @@ const closeShareMenu = () => {
         display: flex;
         align-items: center;
         gap: va.$spacing-md;
-        cursor: pointer;
         transition: all 0.3s ease;
         border-radius: va.$border-radius-sm;
 

@@ -3,7 +3,7 @@
   "nickname": "叶玲子",
   "beian": "冀公网安备13010802002515号",
   "icpBeian": "冀ICP备2023038218号-1",
-  "signature": "坐观垂钓者，徒有羡鱼情",
+  "signature": "世间万般好，唯有苦难长",
   "aboutBlog": "关于本站",
   "aboutAuthor": ["string"],
   "friend": "友链",
@@ -50,5 +50,8 @@
   "commentEmpty": "来发评论吧~",
   "chatRoom": "聊天室",
   "openSource": "开源地址",
-  "chatAI": "AI 聊天"
+  "chatAI": "AI 聊天",
+  "setting": "设置",
+  "language": "语言",
+  "theme": "主题样式"
 }

@@ -4,14 +4,14 @@
     <div class="page-container">
       <div class="timeline">
         <div v-for="(item, index) in archives" :key="index" class="year-group" v-animate-on-scroll>
-          <div class="year-header pointe" @click="toggleYear(item.year)">
+          <div class="year-header pointer" @click="toggleYear(item.year)">
             <span class="year">{{ item.year }}</span>
             <span class="toggle-icon" :class="{ 'is-open': !collapsedYears[item.year] }">
               <SvgIcon name="icon-xiala" size="24" />
             </span>
           </div>
           <Transition name="expand" @enter="startTransition" @leave="endTransition">
-            <div v-if="!collapsedYears[item.year]" class="posts-list">
+            <div v-if="!collapsedYears[item.year]">
               <div v-for="post in item.posts" :key="post.id" class="post-item" @click="goToPost(post.id)">
                 <div class="post-date">
                   <span class="month">{{ getMonth(post.createTime) }}</span>
@@ -32,14 +32,12 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
-import CommonLayout from '../Layout/CommonLayout.vue'
+import CommonLayout from '@/components/Layout/CommonLayout.vue'
 import bgImg from '@/assets/images/bg-article.jpg'
 import { getDate, getMonth } from '@/utils/common'
 import { getArticleListService } from '@/api/article'
 import type { Archives } from '@/types/article'
-gsap.registerPlugin(ScrollTrigger)
+
 
 
 
@@ -102,18 +100,6 @@ const getArchives = async () => {
       collapsedYears[item.year] = false
     })
 
-    // GSAP 动画初始化
-    gsap.utils.toArray('.year-group').forEach((element: any) => {
-      gsap.from(element, {
-        scrollTrigger: {
-          trigger: element,
-          start: 'top center+=100'
-        },
-        opacity: 0,
-        y: 50,
-        duration: 0.8
-      })
-    })
   } catch (error) {
     console.error('Failed to load archives:', error)
   }
@@ -252,9 +238,15 @@ onMounted(async () => {
   }
 }
 
-
-.posts-list {
+/* 过渡动画优化 */
+.expand-enter-active,
+.expand-leave-active {
+  transition: height 0.9s ease;
   overflow: hidden;
-  transition: height 0.3s ease-in-out;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  height: 0;
 }
 </style>

@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <Author class="side-card"></Author>
+  <div class="side-card">
+    <Author></Author>
     <VisitInfo />
     <particleClock></particleClock>
     <TagCloud></TagCloud>
-
   </div>
 </template>
 
@@ -16,4 +15,10 @@ import TagCloud from './SideBarTagCloud.vue';
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.side-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+</style>

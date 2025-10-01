@@ -1,5 +1,4 @@
 <template>
-
   <el-card class="author-card">
     <div class="floating-cards">
       <span v-for="n in 12" :key="n" class="card-particle"></span>
@@ -16,16 +15,6 @@
       <h3>{{ t('nickname') }}</h3>
       <p class="bio">{{ t('signature') }}</p>
     </div>
-    <!-- <div class="social-links">
-      <div v-for="item in socialLinks" :key="item.type">
-        <el-tooltip placement="top" :content="item.content">
-          <a v-if="$store.state.webSiteInfo.showList.indexOf(item.type) !== -1" href="javascript:void(0)" title="GitHub"
-            :class="`social-btn ${item.type}`" @click="copyToClipboard(item)">
-            <i :class="item.icon"></i>
-          </a>
-        </el-tooltip>
-      </div>
-    </div> -->
   </el-card>
 
 </template>

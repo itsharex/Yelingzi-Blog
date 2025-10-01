@@ -17,8 +17,6 @@ body {
     'Microsoft YaHei',
     sans-serif;
   font-size: 1em;
-  overflow: hidden;
-  margin: 0;
 }
 
 /* 链接光标 */
@@ -75,10 +73,10 @@ button {
 }
 
 @font-face {
-  font-family: 'CustomFont'; /* 自定义字体名称 */
-  src: url('./font/2.woff2') format('woff2'); /* 指定字体文件路径和格式 */
-  font-weight: normal; /* 字体粗细 */
-  font-style: normal; /* 字体样式 */
+  font-family: 'CustomFont';
+  src: url('/font/2.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
 }
 
 h1,
@@ -88,6 +86,7 @@ h4,
 h5,
 h6 {
   font-family:
+    'CustomFont',
     'NotoSerifSC',
     -apple-system,
     'Microsoft YaHei',
@@ -115,4 +114,8 @@ textarea {
 
 .clearfix {
   zoom: 1;
+}
+
+.el-select-dropdown__item {
+  cursor: url('../cursors/up.cur'), pointer !important;
 }

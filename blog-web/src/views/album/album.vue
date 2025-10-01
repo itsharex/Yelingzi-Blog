@@ -3,8 +3,8 @@
   <div class="bg">
     <div class="page-container">
       <div class="album-container">
-        <div v-if="albumList.length > 0" class="album-item" v-pio="{ text: `${album.albumName}`, type: 'album' }"
-          v-for="album in albumList" :key="album.id">
+        <div v-if="albumList.length > 0" class="album-item " v-pio="{ text: `${album.albumName}`, type: 'album' }"
+          v-for="album in albumList" :key="album.id" v-slide-in>
           <ImageWithFallback class="album-cover" :src="album.albumCover" />
           <div @click="router.push(`/albums/${album.id}`)" class="album-info">
             <div class="album-name">{{ album.albumName }}</div>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import CommonLayout from "../Layout/CommonLayout.vue";
+import CommonLayout from "@/components/Layout/CommonLayout.vue";
 import ImageWithFallback from "@/components/Image/ImageWithFallback.vue";
 import type { Album } from "@/types/album";
 import image from "@/assets/images/album-bg.jpg"
@@ -119,7 +119,7 @@ onMounted(() => {
   transform: translate3d(0, 0, 0);
 }
 
-@media (max-width: 567px) {
+@media (max-width: 767px) {
   .album-item {
     width: calc(100% - 0.5rem);
   }

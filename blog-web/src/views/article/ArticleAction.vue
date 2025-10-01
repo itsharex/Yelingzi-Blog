@@ -5,7 +5,7 @@
       <el-tooltip class="item" effect="dark" content="点赞" placement="top-start">
         <div class="action-item" @click="handleLike">
           <el-badge :value="article.likeCount || 0" class="item">
-            <div class="action-button">
+            <div class="action-button pointer">
               <SvgIcon name="icon-dianzan_kuai" size="18" class="icon-avtive" :class="{ active: article.isLike }" />
             </div>
           </el-badge>
@@ -14,7 +14,7 @@
       <el-tooltip class="item" effect="dark" content="收藏" placement="top-start">
         <div class="action-item" @click="handleFavorite">
           <el-badge :value="article.starCount || 0" class="item">
-            <div class="action-button">
+            <div class="action-button pointer">
               <SvgIcon name="icon-star" size="18" class="icon-avtive" :class="{ active: article.isStar }" />
             </div>
           </el-badge>
@@ -22,7 +22,7 @@
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="沉浸式浏览" placement="top-start">
         <div class="action-item" @click="handleToggleSidebar">
-          <div class="action-button">
+          <div class="action-button pointer">
             <SvgIcon name="icon-kuoda" size="18" />
           </div>
         </div>
@@ -30,7 +30,7 @@
       <el-tooltip class="item" effect="dark" content="评论" placement="top-start">
         <div class="action-item" @click="handleScrollToComments">
           <el-badge :value="article.commentCount || 0" class="item">
-            <div class="action-button">
+            <div class="action-button pointer">
               <SvgIcon name="icon-xiaoxi" size="18" />
             </div>
           </el-badge>
@@ -66,6 +66,7 @@ const handleFavorite = () => {
 };
 
 const handleToggleSidebar = () => {
+  console.log('lllll')
   emits('toggle-sidebar');
 };
 

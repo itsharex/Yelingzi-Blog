@@ -3,7 +3,7 @@
     <!-- 顶部 Logo + 图标 -->
     <div class="history-header">
       <ImageWithFallback class="logo" :src="Logo" />
-      <SvgIcon name="icon-sidebarcebianlan" size="20" class="header-icon pointer" />
+      <SvgIcon name="icon-sidebarcebianlan" size="20" class="header-icon pointer" @click="onHideHistory" />
     </div>
 
     <!-- 开启新对话 -->
@@ -35,9 +35,9 @@ import Logo from '@/assets/images/yeling.jpg'
 import type { PropType } from 'vue';
 import type { SessionHistoryView } from '@/types/chatai';
 import { useRoute, useRouter } from 'vue-router';
-import { t } from '@/utils/i18n';
+
 const router = useRouter()
-const route = useRoute()
+const emit = defineEmits(['hideHistory'])
 const props = defineProps({
   sessionList: {
     type: Array as PropType<SessionHistoryView[]>,
@@ -54,7 +54,9 @@ const onPushSession = (sessionId: string) => {
 const onPushChaiAI = () => {
   router.push({ name: 'chatai-empty' })
 }
-
+const onHideHistory = () => {
+  emit('hideHistory')
+}
 </script>
 
 

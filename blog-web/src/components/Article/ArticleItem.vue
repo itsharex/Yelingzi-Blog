@@ -5,37 +5,41 @@
       :src="article.articleCover" @click="toArticle(article.id)" />
     <!-- 文章信息 -->
     <div class="article-info">
-      <div class="article-meta">
-        <!-- 置顶 -->
-        <span class="top art-pa" v-if="article.isTop == 1">
-          <SvgIcon name="icon-paihang" size="14" class="icon" />置顶
-        </span>
-        <!-- 发表时间 -->
-        <span class="meta-item art-pa ml-3.75">
-          <SvgIcon name="icon-rili1" size="14" style="color:#f6416c" class="icon" />
-          {{ formatDate(article.updateTime) }}
-        </span>
-        <!-- 文章标签 -->
-        <div class="meta-item art-pa tag-hover pointer" v-pio="{ text: `${tag.tagName} 这个标签`, type: 'look' }"
-          @click="toTag(tag)" v-for="tag in article.tagList" :key="tag.id">
-          <SvgIcon name="icon-youhuiquan" size="14" style="color:#00b8a9" class="icon" />{{ tag.tagName }}
+      <div class="article-main">
+
+
+        <div class="article-meta">
+          <!-- 置顶 -->
+          <span class="top art-pa" v-if="article.isTop == 1">
+            <SvgIcon name="icon-paihang" size="14" class="icon" />置顶
+          </span>
+          <!-- 发表时间 -->
+          <span class="meta-item art-pa ml-3.75">
+            <SvgIcon name="icon-rili1" size="14" style="color:#f6416c" class="icon" />
+            {{ formatDate(article.updateTime) }}
+          </span>
+          <!-- 文章标签 -->
+          <div class="meta-item art-pa tag-hover pointer" v-pio="{ text: `${tag.tagName} 这个标签`, type: 'look' }"
+            @click="toTag(tag)" v-for="tag in article.tagList" :key="tag.id">
+            <SvgIcon name="icon-youhuiquan" size="14" style="color:#00b8a9" class="icon" />{{ tag.tagName }}
+          </div>
         </div>
-      </div>
-      <!-- 文章标题 -->
-      <h3 class="article-title">
-        <div class="title-link pointer" v-pio="{ text: `${article.title}`, type: 'read' }"
-          @click="toArticle(article.id)">
-          {{ article.title }}
-        </div>
-      </h3>
-      <!-- 文章内容 -->
-      <div class="article-content working">{{ article.content }}</div>
-      <!-- 文章分类 -->
-      <div class="article-category art-pa">
-        <SvgIcon name="icon-fenlei1" size="14" style="color:#ffde7d" class="icon" />
-        <div @click="toCategory(article.category)" class="tag-hover pointer"
-          v-pio="{ text: `${article.category.categoryName} 这个分类`, type: 'look' }">
-          {{ article.category.categoryName }}
+        <!-- 文章标题 -->
+        <h3 class="article-title">
+          <div class="title-link pointer" v-pio="{ text: `${article.title}`, type: 'read' }"
+            @click="toArticle(article.id)">
+            {{ article.title }}
+          </div>
+        </h3>
+        <!-- 文章内容 -->
+        <div class="article-content working">{{ article.content }}</div>
+        <!-- 文章分类 -->
+        <div class="article-category art-pa">
+          <SvgIcon name="icon-fenlei1" size="14" style="color:#ffde7d" class="icon" />
+          <div @click="toCategory(article.category)" class="tag-hover pointer"
+            v-pio="{ text: `${article.category.categoryName} 这个分类`, type: 'look' }">
+            {{ article.category.categoryName }}
+          </div>
         </div>
       </div>
       <!-- 阅读按钮 -->
@@ -123,12 +127,14 @@ onMounted(() => {
 .article-item {
   display: flex;
   height: 14rem;
-  margin: 1.25rem 0.5rem 0;
+  margin: 1.25rem 0;
+  padding: 0 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.625rem 1.875rem -0.9375rem var(--box-bg-shadow);
   animation-duration: 0.5s;
   transition: all 0.2s ease-in-out 0s;
   visibility: visible;
+  overflow-x: hidden;
 
   &:hover {
     box-shadow: 0 0 1.5rem var(--box-bg-shadow);
@@ -316,8 +322,13 @@ onMounted(() => {
 
     .article-info {
       width: 100%;
-      height: 14rem;
-      padding: 0 1rem 3rem;
+      max-height: 14rem;
+      padding: 1rem 0rem 3rem;
+    }
+
+    .article-main {
+      padding: 0 1rem;
+
     }
 
     &:nth-child(even) {

@@ -54,7 +54,9 @@
   --lightRed: #ff4b2b;
   --gradualRed: linear-gradient(to right, #ff4b2b, #ff416c);
   --md-bg: #fff;
+  --hover-primary: #a1cffd;
   --hover-secondary: #f0f5ff;
+  --glass-bg: rgba(240, 255, 253, 0.65);
 }
 
 /* 黑夜颜色 */
@@ -77,7 +79,7 @@
   --grey-9-a1: rgba(51, 51, 51, 0.1);
   --grey-2-a0: rgba(54, 54, 54, 0);
   --color-pink-light: #322d31;
-  --color-cyan-light: #2d3230;
+  --color-cyan-light: #c6e4d8;
   --color-red: rgba(237, 118, 137, 0.9);
   --color-pink: rgba(241, 139, 179, 0.8);
   --color-orange: rgba(240, 163, 135, 0.8);
@@ -101,10 +103,12 @@
   --lightRed: #ff4b2b;
   --gradualRed: linear-gradient(to right, #ff4b2b, #ff416c);
   --md-bg: #000;
+  --hover-primary: #a1cffd;
   --hover-secondary: #1e2a47;
+  --glass-bg: rgba(240, 255, 253, 0.65);
 
   img {
-    filter: brightness(0.8);
+    filter: brightness(0.9);
   }
 }
 

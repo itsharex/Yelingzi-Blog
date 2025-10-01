@@ -1,6 +1,7 @@
 <!-- about -->
 <template>
-  <el-image class="img" :src="image" lazy fit="cover">
+
+  <el-image class="img animated swashIn" :src="image" lazy fit="cover">
     <template #error>
       <div class="error-fallback">
         <el-image :src="defaultFallback" alt="404" />
@@ -35,12 +36,11 @@
       <p>忘词了</p>
     </div>
     <snowHr />
-
     <FriendInfoSection :title="t('aboutMe')" :items="aboutme" />
-
     <FriendInfoSection :title="t('aboutBlog')" :items="aboutBlog" />
-
   </div>
+
+
 </template>
 
 <script setup lang="ts">
@@ -143,5 +143,35 @@ const t = (key: string) => {
   line-height: 2.4;
   font-size: 1.5rem;
   text-align: center;
+}
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+
+@keyframes swashIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0);
+  }
+
+  90% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(0.9, 0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+  }
+}
+
+.swashIn {
+  animation-name: swashIn;
 }
 </style>

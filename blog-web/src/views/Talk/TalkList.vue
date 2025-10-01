@@ -54,7 +54,7 @@ import type { Talk } from "@/types/talk";
 import { formatDateWithRelativeTime } from "@/utils/common";
 import proButton from "@/components/Button/proButton.vue";
 import { reactive, onMounted, ref } from "vue";
-import CommonLayout from "../Layout/CommonLayout.vue";
+import CommonLayout from "@/components/Layout/CommonLayout.vue";
 import ImageList from "@/components/Image/ImageList.vue";
 import bgImg from '@/assets/images/talks-bg.jpg'
 import { getTalkListByPageService } from "@/api/talk";
@@ -210,5 +210,11 @@ onMounted(() => {
 .info {
   display: flex;
   align-items: center;
+}
+
+.loading-warp {
+  display: flex;
+  justify-content: center;
+  padding: 12px 20px;
 }
 </style>

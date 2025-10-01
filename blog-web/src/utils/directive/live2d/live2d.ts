@@ -23,7 +23,6 @@ const pioDirective: Directive = {
         }
       })
     }
-    console.log('pio directive mounted:', text, type)
     // 添加事件监听
     el.addEventListener('mouseenter', handler)
 

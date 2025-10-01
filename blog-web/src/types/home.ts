@@ -1,12 +1,3 @@
-export interface MenuItem {
-  name: string
-  path: string
-  icon: string
-  colorClass: string
-  children?: MenuItem[]
-  external?: boolean
-}
-
 export interface Weather {
   sheng: string,
   shi: string,

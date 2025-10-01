@@ -26,14 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import CommonLayout from '../Layout/CommonLayout.vue';
+import CommonLayout from '@/components/Layout/CommonLayout.vue';
 import ImageList from '@/components/Image/ImageList.vue';
 import type { Photo, PhotoInfo } from '@/types/album';
 import { ref, onMounted, reactive } from 'vue';
 import { useResize } from '@/utils/common';
 import { getAlbumDataService } from '@/api/album'
-  ;
-import { ElMessage } from 'element-plus';
+
 interface Props {
   id: number
 }
@@ -91,7 +90,6 @@ onMounted(() => {
   }
 
   .icon-active {
-
     border-color: var(--theme-color);
   }
 }

@@ -495,4 +495,17 @@ watch(
   padding: 8px 12px;
   height: 152px;
 }
+
+@media (max-width: 767px) {
+  .chat-size {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .chat-aside {
+    display: none;
+  }
+}
 </style>

@@ -55,4 +55,7 @@ export interface LocalConfig {
   chatRoom: string;
   openSource: string;
   chatAI: string;
+  setting: string;
+  language: string;
+  theme: string;
 }

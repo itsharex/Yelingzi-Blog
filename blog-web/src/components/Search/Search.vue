@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="title">{{ t('search') }}</div>
-      <component class="icon pointer" :is="closeIcon" @click.stop="onClose()" />
+      <SvgIcon name="icon-close1" size="32" class="icon pointer" @click.stop="onClose()" />
     </div>
     <div class="search-wrapper">
       <div class="search-container">
@@ -22,16 +22,12 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { t } from '@/utils/i18n'
 import SearchArticle from './SearchArticle.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
-
-const closeIcon = defineAsyncComponent(() =>
-  import('@/assets/icons/close.svg')
-);
 
 const emit = defineEmits(['close']);
 const content = ref('')
@@ -62,7 +58,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .container {
-  padding: 20px;
+  padding: 20px 0;
   width: 100%;
   background-color: var(--article-bg);
   min-height: 100vh;
@@ -96,9 +92,8 @@ onMounted(() => {
 }
 
 .icon {
-  width: 24px;
-  height: 24px;
   margin-left: auto;
+  color: #ff7575;
 }
 
 .search-container {
@@ -147,5 +142,15 @@ onMounted(() => {
   max-width: 640px;
   margin: 0 auto;
   padding: 0;
+}
+
+@media (max-width: 767px) {
+  .search-input {
+    width: 100%;
+  }
+
+  .header {
+    padding-right: 30px;
+  }
 }
 </style>
