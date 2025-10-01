@@ -24,8 +24,6 @@ public class EveryDayUpdateTask {
 
     private final RedisService redisService;
 
-    @Autowired
-    private InnMapper innMapper;
 
     @Autowired
     private StatisticsUtils statisticsUtils;
@@ -39,42 +37,12 @@ public class EveryDayUpdateTask {
         this.redisService = redisService;
     }
 
-    // 每天12:00执行
-    @Transactional
+    // 每天04:00执行
     @Scheduled(cron = "0 0 4 * * ?")
     public void myTask() {
         System.out.println("定时任务执行时间：" + new Date());
 
-//        List<InnLedger> ledgers = innMapper.getInnRoom();
-//        Date currentDate = new Date();
-//
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//
-//        for (InnLedger ledger : ledgers) {
-//            try {
-//                if(ledger.getOrderNum() != null){
-//                    Date endDate = dateFormat.parse(ledger.getEndTime());
-//                    if (endDate.before(currentDate)) {
-//                        String state = innMapper.getInnLedger(ledger.getOrderNum());
-//                        if(state != null){
-//                            innMapper.setInnLedger(ledger.getOrderNum(),"已完成");
-//                        }
-//                        ledger.setState("空");
-//                        ledger.setOrderNum("");
-//                        ledger.setStartTime("");
-//                        ledger.setEndTime("");
-//                        innMapper.checkInRoom(ledger);
-//
-//                    }
-//                }
-//            } catch (Exception e) {
-//                // 处理日期转换异常
-//                e.printStackTrace();
-//            }
-//        }
-
         batchInsertViewInfo();
-
 
         Statistics stats = statisticsUtils.getStatistics();
 

@@ -179,12 +179,18 @@ public class VisitServiceImpl implements VisitService {
         String todayKey = "views:" + now.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         /* 2. 调用第三方接口取天气 */
-        Weather weather = getWeatherByIp(ip);
+        Weather weather;
+        if (!isLocalIp(ip)) {
+            weather = getWeatherByIp(ip);
+        } else {
+            weather = new Weather();
+        }
 
         /* 3. 组装 ViewInfo */
         ViewInfo viewInfo = new ViewInfo();
         viewInfo.setIp(ip);
-        viewInfo.setCity(weather.getGuo() + weather.getSheng() + weather.getShi());
+
+        viewInfo.setCity(Objects.equals(weather.getSheng(), "未知") ? "未知" :weather.getGuo() + weather.getSheng() + weather.getShi());
         viewInfo.setCreateTime(now);
         viewInfo.setUserId(user.getId());
         viewInfo.setNickname(user.getNickname());
@@ -259,10 +265,27 @@ public class VisitServiceImpl implements VisitService {
     /* 兜底：接口超时/异常时返回未知地址，保证主流程继续 */
     private Weather unknownWeather() {
         Weather w = new Weather();
-        w.setGuo("未知");
         w.setSheng("未知");
-        w.setShi("未知");
         return w;
+    }
+
+    private static boolean isLocalIp(String ip) {
+        return ip == null ||
+                ip.startsWith("127.") ||
+                ip.startsWith("0:0:0:0:0:0:0:1") ||  // IPv6 本地
+                ip.equals("0.0.0.0") ||
+                ip.equals("::1") ||
+                ip.startsWith("192.168.") ||
+                ip.startsWith("10.") ||
+                ip.startsWith("172.") && is172Private(ip);
+    }
+
+    private static boolean is172Private(String ip) {
+        // 172.16.0.0/12
+        String[] parts = ip.split("\\.");
+        if (parts.length != 4) return false;
+        int second = Integer.parseInt(parts[1]);
+        return 16 <= second && second <= 31;
     }
 }
 
