@@ -1,0 +1,205 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "name": "home",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/article/detail",
+      "name": "article",
+      "style": {
+        "navigationBarTitleText": "文章"
+      }
+    },
+    {
+      "path": "pages/talk/list",
+      "name": "talks",
+      "style": {
+        "navigationBarTitleText": "说说列表"
+      }
+    },
+    {
+      "path": "pages/talk/detail",
+      "name": "talk",
+      "style": {
+        "navigationBarTitleText": "说说"
+      }
+    },
+    {
+      "path": "pages/album/index",
+      "name": "album",
+      "style": {
+        "navigationBarTitleText": "相册"
+      }
+    },
+    {
+      "path": "pages/album/detail",
+      "name": "albumById",
+      "style": {
+        "navigationBarTitleText": "相册"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "name": "login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+  //   {
+  //     "path": "pages/login/forget",
+  //     "name": "forget",
+  //     "style": {
+  //       "navigationBarTitleText": "忘记密码"
+  //     }
+  //   },
+    {
+      "path": "pages/archive/index",
+      "name": "Archive",
+      "style": {
+        "navigationBarTitleText": "归档"
+      }
+    },
+    {
+      "path": "pages/category/index",
+      "name": "category",
+      "style": {
+        "navigationBarTitleText": "分类"
+      }
+    },
+    {
+      "path": "pages/tag/index",
+      "name": "tag",
+      "style": {
+        "navigationBarTitleText": "标签"
+      }
+    },
+    {
+      "path": "pages/friend/index",
+      "name": "Friend",
+      "style": {
+        "navigationBarTitleText": "友链"
+      }
+    },
+    {
+      "path": "pages/about/index",
+      "name": "about",
+      "style": {
+        "navigationBarTitleText": "关于"
+      }
+    },
+    {
+      "path": "pages/user/index",
+      "name": "user",
+      "style": {
+        "navigationBarTitleText": "个人中心"
+      }
+    },
+  //   {
+  //     "path": "pages/user/info",
+  //     "name": "userInfo",
+  //     "style": {
+  //       "navigationBarTitleText": "个人信息"
+  //     }
+  //   },
+
+  //   /* ===== 以下页面使用 FixedLayout（无 tabBar） ===== */
+    {
+      "path": "pages/chat/index",
+      "name": "chat",
+      "style": {
+        "navigationBarTitleText": "问题反馈"
+      }
+    },
+	{
+	  "path": "pages/chat/detail",
+	  "name": "chat",
+	  "style": {
+	    "navigationBarTitleText": "问题反馈"
+	  }
+	},
+    {
+      "path": "pages/message/index",
+      "name": "Message",
+      "style": {
+        "navigationBarTitleText": "留言"
+      }
+    },
+    {
+      "path": "pages/chatai/index",
+      "name": "aichat",
+      "style": {
+        "navigationBarTitleText": "AI对话"
+      }
+    },
+    {
+      "path": "pages/error/404",
+      "style": {
+        "navigationBarTitleText": "页面不存在"
+      }
+    },
+    {
+    	"path" : "pages/chat/record",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : ""
+    	}
+    }
+  ],
+
+  // /* 如果你需要 tabBar，把 Layout 下的几个页面放这里 */
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/bar/chinese_lion.png",
+        "selectedIconPath": "static/bar/chinese_lion_active.png"
+      },
+      {
+        "pagePath": "pages/talk/list",
+        "text": "说说",
+        "iconPath": "static/bar/lantern.png",
+        "selectedIconPath": "static/bar/lantern_active.png"
+      },
+      {
+        "pagePath": "pages/chatai/index",
+        "text": "AI聊天",
+        "iconPath": "static/bar/knot.png",
+        "selectedIconPath": "static/bar/knot_active.png"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "text": "我的",
+        "iconPath": "static/bar/plum_flower.png",
+        "selectedIconPath": "static/bar/plum_flower_active.png"
+      }
+    ]
+  },
+
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "condition": {
+    "current": 0,
+    "list": []
+  },
+  "lazyCodeLoading": "requiredComponents"
+}

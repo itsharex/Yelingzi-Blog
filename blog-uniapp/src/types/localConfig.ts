@@ -1,0 +1,61 @@
+// types/localConfig.d.ts
+export interface LocalConfig {
+
+  // 索引签名
+  [key: string]: string;
+
+  blogName: string;
+  nickname: string;
+  beian: string;
+  icpBeian: string;
+  signature: string;
+  aboutBlog: string;
+  friend: string;
+  album: string;
+  messageBorad: string;
+  article: string;
+  archive: string;
+  category: string;
+  tag: string;
+  home: string;
+  talk: string;
+  about: string;
+  aboutMe: string;
+  linkMe: string;
+  backManagement: string;
+  personalCenter: string;
+  logOut: string;
+  login: string;
+  search: string;
+  friendlyLink: string;
+  webInfo: string;
+  proposal: string;
+  tagCloud: string;
+  accessInfo: string;
+  date: string;
+  city: string;
+  temperatureRange: string,
+  weather: string,
+  wind: string,
+  humidity: string,
+  pressure: string,
+  precipitation: string,
+  feelsLike: string,
+  windSpeed: string,
+  online: string;
+  send: string;
+  messageInput: string;
+  loadMore: string;
+  copy: string;
+  loadEnd: string;
+  seachInput: string;
+  comment: string;
+  commentEmpty: string
+  user: string;
+  chatRoom: string;
+  openSource: string;
+  chatAI: string;
+  setting: string;
+  language: string;
+  theme: string;
+}

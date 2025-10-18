@@ -1,0 +1,7 @@
+{
+  "files": [],                      // 必须为空
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

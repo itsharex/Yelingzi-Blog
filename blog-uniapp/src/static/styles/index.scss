@@ -1,0 +1,68 @@
+:after,
+:before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--grey-0);
+  color: var(--text-color);
+  font-family:
+    'CustomFont',
+    Mulish,
+    -apple-system,
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
+  font-size: 1em;
+}
+
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('https://www.yeling.top/file/font/2.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    'CustomFont',
+    'NotoSerifSC',
+    -apple-system,
+    'Microsoft YaHei',
+    sans-serif;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 1.25rem 0 0.9375rem;
+}
+
+button,
+input,
+select,
+textarea {
+  background-color: transparent;
+  border-style: none;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  clear: both;
+  display: block;
+  content: '.';
+  height: 0;
+}
+
+.clearfix {
+  zoom: 1;
+}
+
+.el-select-dropdown__item {
+  cursor: url('../cursors/up.cur'), pointer !important;
+}
