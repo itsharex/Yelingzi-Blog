@@ -33,8 +33,6 @@ const userStore = useUserStore()
 const disabledSmooth = ref(true)
 const route = useRoute()
 
-
-
 // 监听路由变化
 watch(
   () => route.path,

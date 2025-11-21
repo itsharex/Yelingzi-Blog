@@ -1,7 +1,7 @@
 <template>
 
   <!-- 使用 CSS Grid 布局 -->
-  <div class="article-grid">
+  <div v-if="list.length > 0" class="article-grid">
     <div class="article-item" v-for="article of props.list" :key="article.id">
       <div class="article-cover">
         <router-link :to="`/article/${article.id}`">
@@ -37,15 +37,20 @@
     </div>
   </div>
 
+  <div v-else>
+    <Empty :loading="loading" />
+  </div>
+
 </template>
 
 <script setup lang="ts">
-import { type PropType } from 'vue';
+import { watch, type PropType } from 'vue';
 import { formatDate } from '@/utils/common'
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue';
 import { useRouter } from 'vue-router';
 import type { Tag } from '@/types/article';
 import type { ArticleCondition } from '@/types/tag';
+import Empty from '@/components/Empty/Empty.vue';
 
 const router = useRouter()
 
@@ -53,6 +58,11 @@ const props = defineProps({
   list: {
     type: Array as PropType<ArticleCondition[]>,
     required: true
+  },
+  loading: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 const emit = defineEmits(['update:tag'])
@@ -62,7 +72,9 @@ const emitTagChange = (tag: Tag) => {
   emit('update:tag', tag)
 }
 
-
+watch(() => props.list, (newVal) => {
+  console.log('Article list updated:', newVal);
+})
 
 </script>
 

@@ -17,6 +17,7 @@
             <span v-if="chat.lastMessage.messageType === 'text'">{{ chat.lastMessage.message }}</span>
             <span v-else-if="chat.lastMessage.messageType === 'image'" class="image-msg"></span>
             <span v-else-if="chat.lastMessage.messageType === 'file'" class="file-msg"></span>
+            <span v-else-if="chat.lastMessage.messageType === 'emoji'" class="emoji-msg"></span>
           </template>
         </div>
 
@@ -155,5 +156,10 @@ const pushChating = (chat: Chat) => {
 .file-msg::after {
   content: "【文件】";
   color: #48bb78;
+}
+
+.emoji-msg::after {
+  content: "【表情】";
+  color: #ffd900;
 }
 </style>

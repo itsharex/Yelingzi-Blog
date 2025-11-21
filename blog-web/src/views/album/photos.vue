@@ -1,25 +1,31 @@
 <template>
   <CommonLayout :title="photoInfo.albumName" :bg-img="photoInfo.albumCover" />
   <div class="bg">
-    <div class="page-container">
-      <div class="image-layout-tool" v-if="!isMobi" style="margin-right: 10px">
-        <div class="img-icon-warp pointer" style="padding: 5px 5px 5px 7px"
-          :class="{ 'icon-active': imageLayout === 24 }" @click="handleChangeLayout(24)">
-          <img src="@/assets/icons/col1.png" fit="cover" />
+    <div class="page-container" :loading="albumloading">
+      <div v-if="!albumloading">
+        <div class="image-layout-tool" v-if="!isMobi" style="margin-right: 10px">
+          <el-segmented v-model="imageLayout" :options="options">
+            <template #default="{ item }">
+              <div class="img-icon-warp pointer">
+                <SvgIcon :name="item.icon" :size="32" />
+              </div>
+            </template>
+          </el-segmented>
         </div>
-        <div class="img-icon-warp pointer" style="padding: 5px 5px 5px 7px"
-          :class="{ 'icon-active': imageLayout === 12 }" @click="handleChangeLayout(12)">
-          <img src="@/assets/icons/col2.png" />
-        </div>
-        <div class="img-icon-warp pointer" style="" :class="{ 'icon-active': imageLayout === 8 }"
-          @click="handleChangeLayout(8)">
-          <img src="@/assets/icons/col3.png" />
+        <ImageList v-if="imageList.length > 0" :key="imageLayout" :image-layout="imageLayout" :image-list="imageList">
+        </ImageList>
+        <div class="empty" v-else>
+          <Empty :loading="false" text="当前相册为空">
+          </Empty>
         </div>
       </div>
-      <ImageList v-if="imageList.length > 0" :key="imageLayout" :image-layout="imageLayout" :image-list="imageList">
-      </ImageList>
-      <div v-else>
-        <el-empty description="当前相册为空"></el-empty>
+      <div class="empty" v-else>
+        <Empty :loading="loading">
+          <div class="empty-action pointer">
+            <proButton v-if="!loading" info="重新加载" before="#ed6ea0" after="#9cd0ed" width="120px" @click="getImageList">
+            </proButton>
+          </div>
+        </Empty>
       </div>
     </div>
   </div>
@@ -29,9 +35,11 @@
 import CommonLayout from '@/components/Layout/CommonLayout.vue';
 import ImageList from '@/components/Image/ImageList.vue';
 import type { Photo, PhotoInfo } from '@/types/album';
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useResize } from '@/utils/common';
 import { getAlbumDataService } from '@/api/album'
+import Empty from '@/components/Empty/Empty.vue';
+import proButton from '@/components/Button/proButton.vue';
 
 interface Props {
   id: number
@@ -41,7 +49,8 @@ const props = withDefaults(defineProps<Props>(), {
   id: 0
 })
 const isMobi = useResize()
-const imageLayout = ref(24)
+const loading = ref(true);
+const albumloading = ref(true);
 const photoInfo = ref<PhotoInfo>({
   id: 0,
   albumCover: "",
@@ -52,14 +61,27 @@ const photoInfo = ref<PhotoInfo>({
 });
 
 const imageList = ref<string[]>([])
-const handleChangeLayout = (num: number) => {
-  imageLayout.value = num
-}
+
+type ImageLayout = 24 | 16 | 8
+const imageLayout = ref<ImageLayout>(24)
+const options = [
+  { value: 24 as ImageLayout, icon: 'icon-shop_c_grid' },
+  { value: 16 as ImageLayout, icon: 'icon-layout-grid2-alt' },
+  { value: 8 as ImageLayout, icon: 'icon-layout-grid3-alt' },
+]
+
 const getImageList = async () => {
-  console.log(props.id)
-  const res = await getAlbumDataService(props.id)
-  photoInfo.value = res.data.data
-  imageList.value = photoInfo.value.photoList.map(item => item.photoUrl);
+  loading.value = true;
+  albumloading.value = true;
+  try {
+    const res = await getAlbumDataService(props.id)
+    photoInfo.value = res.data.data
+    imageList.value = photoInfo.value.photoList.map(item => item.photoUrl);
+    albumloading.value = false;
+  } catch {
+    loading.value = false;
+  }
+
 }
 onMounted(() => {
   getImageList()
@@ -76,21 +98,28 @@ onMounted(() => {
   .img-icon-warp {
     border-radius: var(--border-radius-1);
     border: 1px solid var(--border-color);
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5px 5px 5px 7px;
-
-    img {
-      height: 100%;
-    }
+    padding: 12px 18px;
   }
 
-  .icon-active {
-    border-color: var(--theme-color);
-  }
+}
+
+:deep(.el-segmented__item) {
+  padding: 0;
+}
+
+.empty {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 </style>

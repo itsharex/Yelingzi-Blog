@@ -42,21 +42,20 @@ import AIChat from './AIChat.vue';
 import ChatInput from './ChatInput.vue';
 import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
 import type { ChatHistoryView, SessionHistory, SessionHistoryView } from '@/types/chatai';
-import { addSessionIdService, getHistoryBySessionService, getSessionListService, sendAIChatModelStream, sendAIChatStream } from '@/api/chatai';
+import { addSessionIdService, getHistoryBySessionService, getSessionListService, sendAIChatServiceService, sendAIChatsServiceService } from '@/api/chatai';
 import { useUserStore } from '@/stores';
-import { useRoute } from 'vue-router';
-import { debounce } from 'lodash-es';
+import { useRoute, useRouter } from 'vue-router';
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue';
 import Logo from '@/assets/images/yeling.jpg'
+import { addWsMessageHandler, removeWsMessageHandler } from '@/utils/websocket';
 
 /* ---------------- 数据 ---------------- */
 const userStore = useUserStore();
 const route = useRoute();
-
+const router = useRouter();
 const sessionId = ref('');
 const sessionList = ref<SessionHistoryView[]>([]);
 const historyList = ref<ChatHistoryView[]>([]);
-const done = ref(false);
 const abortController = ref<AbortController | null>(null);
 const isTyping = ref(false);
 const typingChatId = ref<string | number | null>(null);
@@ -66,6 +65,15 @@ const isShowHistory = ref(true);
 //转换显示与隐藏历史记录
 const toggleHistory = () => {
   isShowHistory.value = !isShowHistory.value;
+};
+
+/* ---------------- 公共方法 ---------------- */
+const addMessage = (date: number, role: 'user' | 'assistant', text: string) => {
+  return ({
+    id: date,
+    role: role,
+    content: text
+  });
 };
 
 // 加载会话列表
@@ -99,21 +107,6 @@ const loadHistory = async (id: string) => {
   }
 };
 
-// 处理流数据块
-const processChunk = (chunk: string): string[] => {
-  return chunk
-    .split('\n\n')
-    .filter(segment => {
-      const trimmed = segment.trim();
-      return trimmed && trimmed.startsWith('data:');
-    })
-    .map(segment =>
-      segment.split('\n')
-        .map(line => line.replace(/data:/gi, '').trim())
-        .join('\n')
-    );
-};
-
 
 // 创建新会话
 const createNewSession = async (text: string) => {
@@ -140,44 +133,20 @@ const handleSend = async (text: string, model: string) => {
 
   // 1. 无 sessionId 先创建会话
   if (!sessionId.value && !(await createNewSession(text))) {
+
     return;
   }
 
+
+
+  const messageId = Date.now();
   // 添加用户消息
-  historyList.value.push({
-    id: Date.now(),
-    role: 'user',
-    content: text
-  });
+  historyList.value.push(addMessage(messageId, 'user', text))
   isTyping.value = true;
-  // 处理AI响应
-  await handleReceive(text, model);
-};
 
-// 处理AI响应
-const handleReceive = async (text: string, model: string) => {
-  done.value = false;
-
-  // 添加AI消息占位
-  const assistantMessageId = Date.now();
-  historyList.value.push({
-    id: assistantMessageId,
-    role: 'assistant',
-    content: ''
-  });
-
+  const assistantMessageId = messageId + 1;
+  historyList.value.push(addMessage(assistantMessageId, 'assistant', ''));
   typingChatId.value = assistantMessageId;
-
-  const messageIndex = historyList.value.length - 1;
-  let fullContent = '';
-
-  // 防抖更新UI
-  const updateUI = debounce(() => {
-    const message = historyList.value[messageIndex];
-    if (message) {
-      message.content = fullContent;
-    }
-  }, 50);
 
   try {
     const isXiaoLing = model === '小玲';
@@ -191,10 +160,11 @@ const handleReceive = async (text: string, model: string) => {
       signal: abortController.value?.signal
     };
 
-    const stream = isXiaoLing
-      ? await sendAIChatStream(requestParams)
-      : await sendAIChatModelStream({
-        parmas: {
+    if (isXiaoLing) {
+      await sendAIChatServiceService(requestParams);
+    } else {
+      await sendAIChatsServiceService(
+        {
           options: {
             platform,
             model: modelName,
@@ -203,43 +173,35 @@ const handleReceive = async (text: string, model: string) => {
           sessionId: sessionId.value,
           prompt: text
         },
-        ...requestParams
-      });
-
-    // 处理ReadableStream
-    const reader = stream.getReader();
-    const decoder = new TextDecoder();
-
-    while (true) {
-      const { done: streamDone, value } = await reader.read();
-
-      if (streamDone) {
-        done.value = true;
-        updateUI();
-        break;
-      }
-
-      const chunk = decoder.decode(value, { stream: true });
-      const messages = processChunk(chunk);
-      fullContent += messages;
-      updateUI();
+        requestParams.device);
     }
-
-
+    // router.push({ name: 'chatai', params: { sessionId: sessionId.value } });
   } catch (error) {
-    done.value = true;
-    updateUI();
-
     const errorMessage = error instanceof Error
       ? error.message
       : '未知错误';
+    const msg = historyList.value.find(m => m.id === typingChatId.value);
+    if (msg) {
+      msg.content += errorMessage
+    }
+  }
+};
 
-    fullContent += `\n\n请求失败: ${errorMessage}`;
-  } finally {
-    abortController.value = null;
+const onWsMessage = (data: any) => {
+
+  const msg = historyList.value.find(m => m.id === typingChatId.value);
+  console.log(data)
+  if (data === 'DONE!!') {
     isTyping.value = false;
     typingChatId.value = null;
+    return
   }
+  if (typingChatId.value) {
+    if (msg) {
+      msg.content += data;
+    }
+  }
+
 };
 
 /* ---------------- 监听路由 ---------------- */
@@ -253,11 +215,15 @@ watch(
 );
 
 /* ---------------- 生命周期 ---------------- */
-onMounted(loadSessionList);
+onMounted(() => {
+  addWsMessageHandler('aichat', onWsMessage)
+  loadSessionList()
+});
 
 // 组件卸载时取消所有请求
 onUnmounted(() => {
   abortController.value?.abort();
+  removeWsMessageHandler('aichat', onWsMessage)
 });
 </script>
 

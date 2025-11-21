@@ -11,8 +11,14 @@
             <div class="album-desc">{{ album.albumDesc }}</div>
           </div>
         </div>
-        <div v-else>
-          <el-empty description="相册为空"></el-empty>
+        <div class="empty" v-else>
+          <Empty :loading="loading">
+            <div class="empty-action pointer">
+              <proButton v-if="!loading" info="重新加载" before="#ed6ea0" after="#9cd0ed" width="120px"
+                @click="getAlbumList">
+              </proButton>
+            </div>
+          </Empty>
         </div>
       </div>
     </div>
@@ -28,14 +34,22 @@ import { ref, onMounted } from "vue";
 import { getAlbumListService } from "@/api/album";
 import { useRouter } from "vue-router";
 import { t } from '@/utils/i18n'
+import Empty from '@/components/Empty/Empty.vue';
+import proButton from '@/components/Button/proButton.vue';
 
 const router = useRouter()
-
+const loading = ref(true);
 const albumList = ref<Album[]>([]);
 
 const getAlbumList = async () => {
-  const res = await getAlbumListService()
-  albumList.value = res.data.data
+  loading.value = true;
+  try {
+    const res = await getAlbumListService()
+    albumList.value = res.data.data
+  } catch {
+    loading.value = false;
+  }
+
 }
 
 onMounted(() => {
@@ -49,6 +63,20 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
 }
+
+.empty {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
 
 .album-item {
   position: relative;

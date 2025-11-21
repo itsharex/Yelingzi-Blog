@@ -1,7 +1,7 @@
 <template>
   <CommonLayout :title="t('talk')" :bgImg="bgImg" />
   <div class="bg">
-    <div class="page-container">
+    <div class="page-container" v-if="!isLoadingTalk">
       <div class="talk-item">
         <div class="talk-meta">
           <el-avatar class="user-avatar" :size="50" :src="talk.userAvatar" fit="cover" />
@@ -33,6 +33,14 @@
       </div>
       <Comment v-if="talk.id !== 0" :comment-type="2" :id="talk.id" :author-id="talk.userId"></Comment>
     </div>
+    <div v-else>
+      <Empty :loading="loading">
+        <div class="empty-action pointer">
+          <proButton v-if="!loading" info="返回说说列表" before="#ed6ea0" after="#9cd0ed" width="120px" @click="toTalkList">
+          </proButton>
+        </div>
+      </Empty>
+    </div>
   </div>
 </template>
 
@@ -48,7 +56,8 @@ import ImageList from '@/components/Image/ImageList.vue';
 import { addTalkLikeService, delTalkLikeService, getTalkByIdService, getTalkLikeService } from '@/api/talk';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
-import SvgIcon from '@/components/SvgIcon/SvgIcon.vue';
+import proButton from "@/components/Button/proButton.vue";
+import Empty from '@/components/Empty/Empty.vue';
 
 const router = useRouter()
 import { t } from '@/utils/i18n'
@@ -58,6 +67,8 @@ const badgeIcon = defineAsyncComponent(() =>
 const props = defineProps(['id'])
 const userState = useUserStore()
 const isLike = ref(false)
+const loading = ref(true)
+const isLoadingTalk = ref(true)
 const talk = ref<Talk>({
   id: 0,
   nickname: '',
@@ -108,6 +119,8 @@ const getTalkById = async () => {
   if (props.id === 0) {
     return
   }
+  isLoadingTalk.value = true
+  loading.value = true
   try {
     const res = await getTalkByIdService(props.id)
 
@@ -123,10 +136,12 @@ const getTalkById = async () => {
       ...data,
       imageUrl: imageUrls
     }
+    isLoadingTalk.value = false
   } catch (error) {
     // 如果请求失败，跳转到404页面
     console.error('请求文章失败:', error);
-    router.push('/404');
+    loading.value = false
+    // router.push('/404');
   }
 
 
@@ -139,6 +154,10 @@ const getIsLike = async () => {
     const res = await getTalkLikeService(talk.value.id)
     isLike.value = numberToBoolean(res.data.data)
   }
+}
+
+const toTalkList = () => {
+  router.push('/talks')
 }
 
 onMounted(() => {
@@ -242,6 +261,11 @@ onMounted(() => {
   display: inline-block;
 }
 
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
 
 .icon-avtive {
   transition: transform 0.3s ease-out;

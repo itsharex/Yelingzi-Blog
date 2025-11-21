@@ -8,7 +8,8 @@
 import { RouterView } from 'vue-router'
 import { init } from './init';
 import I18nProvider from './components/Language/I18nProvider.vue';
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
+import { openWs, closeWs } from '@/utils/websocket'
 
 onMounted(async () => {
 
@@ -21,6 +22,10 @@ onMounted(async () => {
     "      | |  | |____| |____ _| |_| |\\  | |__| |/ /__ _| |_ \n" +
     "      |_|  |______|______|_____|_| \\_|\\_____/_____|_____|"
   );
+  openWs()
+})
+onUnmounted(() => {
+  closeWs()
 })
 
 </script>

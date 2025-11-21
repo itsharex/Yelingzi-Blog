@@ -3,7 +3,8 @@
     <!-- 弹幕列表 30% -->
     <div class="danmaku-container">
 
-      <vue-danmaku ref="danmaku" class="danmaku" use-slot v-model:danmus="messageList" :is-suspend="true">
+      <vue-danmaku v-if="messageList.length > 0" ref="danmaku" class="danmaku" use-slot v-model:danmus="messageList"
+        :is-suspend="true">
         <template v-slot:dm="{ danmu }">
           <span class="danmaku-item">
             <el-avatar :src="danmu.userAvatar ? danmu.userAvatar : avatar" :size="30" />
@@ -12,6 +13,14 @@
           </span>
         </template>
       </vue-danmaku>
+      <div class="empty" v-else>
+        <Empty :loading="loading">
+          <div class="empty-action pointer">
+            <proButton v-if="!loading" info="重新加载" before="#ed6ea0" after="#9cd0ed" width="120px" @click="getMessage">
+            </proButton>
+          </div>
+        </Empty>
+      </div>
 
     </div>
 
@@ -58,8 +67,10 @@ import avatar from '@/assets/images/avatar1.jpg'
 import { formatDate } from "@/utils/common";
 import { addMessageService, getMessageListService } from "@/api/message";
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
-import { useUserStore, useI18nStore } from "@/stores";
+import { useUserStore } from "@/stores";
 import { t } from '@/utils/i18n'
+import Empty from "@/components/Empty/Empty.vue";
+import proButton from '@/components/Button/proButton.vue';
 
 interface Message {
   id: number;
@@ -84,6 +95,7 @@ const messageList = ref<Message[]>([]);
 const messagePaper = ref<MessagePaper[]>([]);
 const initialized = ref(false);
 const userState = useUserStore()
+const loading = ref(true)
 
 const getRandomPosition = (containerWidth: number, containerHeight: number, elementWidth: number, elementHeight: number) => {
   const padding = 20; // 添加一些内边距
@@ -128,13 +140,19 @@ onMounted(async () => {
 });
 
 const getMessage = async () => {
+
   if (messageList) {
     messageList.value.splice(0, messageList.value.length)
   }
+  loading.value = true
+  try {
+    const res = await getMessageListService()
+    messageList.value = res.data.data
+    messagePaper.value = res.data.data
+  } catch {
+    loading.value = false
+  }
 
-  const res = await getMessageListService()
-  messageList.value = res.data.data
-  messagePaper.value = res.data.data
 
 }
 
@@ -266,7 +284,7 @@ html {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 2rem;
+  padding: 2rem 0;
 }
 
 .message-title {
@@ -341,5 +359,15 @@ html {
   .ml {
     margin-left: 0.5rem;
   }
+}
+
+.empty {
+  margin-top: 100px;
+}
+
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 </style>

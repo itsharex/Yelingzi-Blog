@@ -137,6 +137,25 @@ export const numberToBoolean = (num: number) => {
     return true
   }
 }
+export const blockFor5Seconds = () => {
+  const start = Date.now();
+  while (Date.now() - start < 5000) {
+    // 空转，阻塞线程
+  }
+}
+
+export const isValidEmail = (email: string): boolean => {
+  // 正则表达式：匹配标准邮箱格式
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  // 边界情况处理：排除 null、undefined、非字符串类型
+  if (typeof email !== 'string' || email.trim() === '') {
+    return false;
+  }
+
+  // 测试邮箱是否匹配正则
+  return emailRegex.test(email);
+}
 
 export default {
   useResize,
@@ -147,5 +166,6 @@ export default {
   removeTFrontDateString,
   getDateDiff,
   booleanToNumber,
-  numberToBoolean
+  numberToBoolean,
+  isValidEmail
 }

@@ -73,22 +73,6 @@ const route = [
     props: true,
   },
   {
-    name: 'login',
-    path: '/login',
-    component: () => import('@/views/Login/Login.vue'),
-    meta: {
-      title: '登录',
-    },
-  },
-  {
-    name: 'forget',
-    path: '/login/forget',
-    component: () => import('@/views/Login/Forget.vue'),
-    meta: {
-      title: '忘记密码',
-    },
-  },
-  {
     path: '/archive',
     name: 'Archive',
     component: Archive,
@@ -144,6 +128,22 @@ const route = [
 
 const fixedRoute = [
   {
+    name: 'login',
+    path: '/login',
+    component: () => import('@/views/Login/Layout.vue'),
+    meta: {
+      title: '登录',
+    },
+  },
+  {
+    name: 'forget',
+    path: '/login/forget',
+    component: () => import('@/views/Login/Forget.vue'),
+    meta: {
+      title: '忘记密码',
+    },
+  },
+  {
     path: '/chat/:chatType',
     name: 'chat',
     component: () => import('@/views/chat/ChatLayout.vue'),
@@ -167,6 +167,14 @@ const fixedRoute = [
     component: () => import('@/views/message/message.vue'),
     meta: {
       title: '留言',
+    },
+  },
+  {
+    path: '/link/message',
+    name: 'LinkMe',
+    component: () => import('@/views/message/linkMe.vue'),
+    meta: {
+      title: '联系我',
     },
   },
   {
@@ -211,6 +219,10 @@ const router = createRouter({
       component: () => import("@/views/error/error404.vue"),
     },
     { path: "/:catchAll(.*)", redirect: "/404" },
+    {
+      path: "/test",
+      component: () => import("@/views/test.vue"),
+    },
   ],
 })
 

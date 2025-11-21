@@ -5,7 +5,7 @@
       <div class="talk-item" v-slide-in v-for="talk in talkList" :key="talk.id">
         <div class="talk-meta">
           <!-- 用户头像 -->
-          <el-avatar :src="talk.userAvatar" fit="cover" />
+          <yl-avatar :src="talk.userAvatar" fit="cover" />
           <div class="talk-info">
             <span class="talk-user-name">{{ talk.nickname }}
 
@@ -35,8 +35,8 @@
 
       </div>
       <div class="loading-warp">
-        <proButton v-if="loadingTalk" v-loading.fullscreen.lock="loading" :info="t('loadMore') + '...'" width="120px"
-          before="#ed6ea0" after="#9cd0ed" @click="nextPage">
+        <proButton v-if="loadingTalk" v-loading.fullscreen.lock="loadingData" :info="t('loadMore') + '...'"
+          width="120px" before="#ed6ea0" after="#9cd0ed" @click="nextPage" class="pointer">
         </proButton>
         <el-card v-else style="width: 100%;">
           <div style="text-align: center;">{{ t('loadEnd') }}</div>
@@ -44,7 +44,12 @@
       </div>
     </div>
     <div v-else>
-      <el-empty description="说说列表为空"></el-empty>
+      <Empty :loading="loading">
+        <div class="empty-action pointer">
+          <proButton v-if="!loading" info="重新加载" before="#ed6ea0" after="#9cd0ed" width="120px" @click="getList">
+          </proButton>
+        </div>
+      </Empty>
     </div>
   </div>
 </template>
@@ -56,14 +61,17 @@ import proButton from "@/components/Button/proButton.vue";
 import { reactive, onMounted, ref } from "vue";
 import CommonLayout from "@/components/Layout/CommonLayout.vue";
 import ImageList from "@/components/Image/ImageList.vue";
+import YlAvatar from "@/components/Image/YlAvatar.vue";
 import bgImg from '@/assets/images/talks-bg.jpg'
 import { getTalkListByPageService } from "@/api/talk";
 import { useRouter } from "vue-router";
+import Empty from "@/components/Empty/Empty.vue";
 
 const router = useRouter()
 import { t } from '@/utils/i18n'
-const loading = ref(false)
+const loading = ref(true)
 const loadingTalk = ref(true)
+const loadingData = ref(false)
 const data = reactive({
   total: 100,
   page: 1,
@@ -73,6 +81,7 @@ const talkList = ref<Talk[]>([])
 
 const getList = async () => {
   loading.value = true;
+  loadingData.value = true;
   try {
     const res = await getTalkListByPageService(data.page, data.pageSize);
     data.total = res.data.data.total;
@@ -90,6 +99,7 @@ const getList = async () => {
 
     // 追加新数据到现有数组（而不是替换）
     talkList.value = [...talkList.value, ...newTalks];
+    loadingData.value = false;
 
     // 检查是否已加载全部数据
     if (data.page * data.pageSize >= data.total) {
@@ -97,8 +107,9 @@ const getList = async () => {
     }
   } catch (error) {
     console.error('获取数据失败:', error);
-  } finally {
     loading.value = false;
+  } finally {
+
   }
 };
 const nextPage = () => {
@@ -216,5 +227,11 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   padding: 12px 20px;
+}
+
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <CommonLayout title="归档" :bgImg="bgImg" />
+  <CommonLayout :title="t('archive')" :bgImg="bgImg" />
   <div class="bg">
     <div class="page-container">
-      <div class="timeline">
+      <div class="timeline" v-if="archives.length > 0">
         <div v-for="(item, index) in archives" :key="index" class="year-group" v-animate-on-scroll>
           <div class="year-header pointer" @click="toggleYear(item.year)">
             <span class="year">{{ item.year }}</span>
@@ -25,28 +25,35 @@
           </Transition>
         </div>
       </div>
+      <div v-else class="empty">
+        <Empty :loading="loading">
+          <div class="empty-action pointer">
+            <proButton v-if="!loading" info="重新加载" before="#ed6ea0" after="#9cd0ed" width="120px" @click="getArchives">
+            </proButton>
+          </div>
+        </Empty>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import CommonLayout from '@/components/Layout/CommonLayout.vue'
 import bgImg from '@/assets/images/bg-article.jpg'
 import { getDate, getMonth } from '@/utils/common'
 import { getArticleListService } from '@/api/article'
 import type { Archives } from '@/types/article'
-
-
-
+import { t } from '@/utils/i18n'
+import Empty from '@/components/Empty/Empty.vue'
+import proButton from '@/components/Button/proButton.vue';
 
 interface ArchivesItem {
   year: number
   posts: Archives[]
 }
 
-const router = useRouter()
+const loading = ref(true)
 const archives = ref<ArchivesItem[]>([])
 const collapsedYears = reactive<Record<number, boolean>>({})
 
@@ -75,9 +82,9 @@ const endTransition = (element: Element) => {
 }
 
 const getArchives = async () => {
+  loading.value = true
   try {
     const res = await getArticleListService()
-    const temp = reactive<Archives[]>([])
 
     // 首先将数据按年份分组
     const yearMap = new Map<number, Archives[]>()
@@ -102,6 +109,7 @@ const getArchives = async () => {
 
   } catch (error) {
     console.error('Failed to load archives:', error)
+    loading.value = false;
   }
 }
 
@@ -179,6 +187,12 @@ onMounted(async () => {
   }
 }
 
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
 .post-item {
   display: flex;
   align-items: center;
@@ -248,5 +262,13 @@ onMounted(async () => {
 .expand-enter-from,
 .expand-leave-to {
   height: 0;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 260px;
+  width: 100%;
 }
 </style>

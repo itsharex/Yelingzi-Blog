@@ -48,7 +48,7 @@ export const getMenuItems = (): MenuItem[] => [
     colorClass: 'message-link',
     children: [
       { name: 'messageBorad', path: '/message', icon: 'icon-xinfeng', colorClass: 'about-link-me' },
-      { name: 'linkMe', path: '/chat/linkme', icon: 'icon-fasong', colorClass: 'about-link-me' },
+      { name: 'linkMe', path: '/link/message', icon: 'icon-fasong', colorClass: 'about-link-me' },
       { name: 'chatRoom', path: '/chat/chatroom', icon: 'icon-liaotianshi', colorClass: 'home-link' }
     ]
   },

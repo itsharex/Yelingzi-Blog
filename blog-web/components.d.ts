@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ArticleItem: typeof import('./src/components/Article/ArticleItem.vue')['default']
+    ArticlePreviewTheme: typeof import('./src/components/Settings/ArticlePreviewTheme.vue')['default']
     Author: typeof import('./src/components/SideBar/Author.vue')['default']
     BgImage: typeof import('./src/components/Image/BgImage.vue')['default']
     Comment: typeof import('./src/components/Comment/Comment.vue')['default']
@@ -39,11 +40,12 @@ declare module 'vue' {
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElRow: typeof import('element-plus/es')['ElRow']
+    ElSegmented: typeof import('element-plus/es')['ElSegmented']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElStatistic: typeof import('element-plus/es')['ElStatistic']
     ElTag: typeof import('element-plus/es')['ElTag']
-    ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     Empty: typeof import('./src/components/Empty/Empty.vue')['default']
     FixedLayout: typeof import('./src/components/Layout/FixedLayout.vue')['default']
     Footer: typeof import('./src/components/Footer/Footer.vue')['default']

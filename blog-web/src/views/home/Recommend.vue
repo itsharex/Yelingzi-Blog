@@ -7,6 +7,11 @@
         <span class="slide-time">简介：{{ alubum.albumDesc }}</span>
       </div>
     </el-carousel-item>
+    <el-carousel-item v-else v-for="item in 3" :key="item">
+      <div class="slide-content" style="background-color: var(--bg-image-warp-color);">
+        <Empty :loading="loading" />
+      </div>
+    </el-carousel-item>
   </el-carousel>
 </template>
 
@@ -15,14 +20,22 @@ import { getSimpleAlbumOfPhotoCountService } from "@/api/album";
 import type { Album } from "@/types/album";
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Empty from "@/components/Empty/Empty.vue";
 
 const router = useRouter()
 const articleCover = computed(() => (cover: string) => 'background:url(' + cover + ')');
 const albumList = ref<Album[]>([]);
+const loading = ref(true)
 
 const getAlbumList = async () => {
-  const res = await getSimpleAlbumOfPhotoCountService()
-  albumList.value = res.data.data
+  loading.value = true
+  try {
+    const res = await getSimpleAlbumOfPhotoCountService()
+    albumList.value = res.data.data
+  } catch {
+    loading.value = false
+  }
+
 }
 
 const toAlbum = (id: number) => {

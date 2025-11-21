@@ -11,7 +11,7 @@
         <div class="left-container">
           <!-- 说说 -->
           <Talk></Talk>
-          <!-- 推荐文章 -->
+          <!-- 推荐相册 -->
           <Recommend></Recommend>
           <!-- 文章列表 -->
           <ArticleItem></ArticleItem>

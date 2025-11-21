@@ -10,4 +10,5 @@ export default pinia
 export * from './modules/blog'
 export * from './modules/i18n'
 export * from './modules/user'
-export * from './modules/page'
+export * from './modules/yiyan'
+export * from './modules/chat'

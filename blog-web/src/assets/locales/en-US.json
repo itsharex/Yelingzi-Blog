@@ -53,5 +53,6 @@
   "chatAI": "Chat AI",
   "setting": "Setting",
   "language": "Language",
-  "theme": "Theme"
+  "theme": "Theme",
+  "articleTheme": "Article Theme"
 }

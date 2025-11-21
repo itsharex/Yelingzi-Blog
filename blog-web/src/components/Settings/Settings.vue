@@ -14,6 +14,10 @@
     <span>{{ t('theme') }}</span>
     <ThemeSwitcher />
   </div>
+  <div class="setting-item">
+    <span>{{ t('articleTheme') }}</span>
+    <ArticlePreviewTheme v-pio="{ text: `这里可以切换文章展示主题哦` }" />
+  </div>
 
 </template>
 
@@ -21,6 +25,7 @@
 import SvgIcon from '../SvgIcon/SvgIcon.vue';
 import ThemeSwitcher from './ThemeSwitcher.vue';
 import LanguageSwitchaer from './LanguageSwitchaer.vue';
+import ArticlePreviewTheme from '@/components/Settings/ArticlePreviewTheme.vue';
 import { t } from '@/utils/i18n'
 
 const emit = defineEmits(['close']);
@@ -82,7 +87,7 @@ $gap: 16px;
   }
 
   span {
-    width: 160px;
+    width: 130px;
     // flex: 1;
     // letter-spacing: 0.5px;
   }

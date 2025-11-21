@@ -8,7 +8,9 @@
         <el-container>
           <el-header class="chat-header">
             <h1 class="chat-header-name">{{ chating.nickname }}</h1>
-            <div v-if="!userStore.getIsLogin()" class="chat-header-tip">未登录状态下可能会导致聊天记录丢失</div>
+            <div v-if="!userStore.getIsLogin() && chating.chatType == 'single'" class="chat-header-tip">
+              私聊请使用新版页面喵~，这里回复时间较慢哦~
+            </div>
           </el-header>
           <el-main class="chat-main">
             <ChatRecord v-if="chating.chatType === 'single'" :chating="chating" @load-more="onLoadMore"
@@ -45,6 +47,7 @@ import GroupChatInput from './GroupChatInput.vue'
 import ChatList from './ChatList.vue'
 import { getChatListService, getNewChatCountByGroupService, getNewChatCountBySingleService } from '@/api/chat'
 import { ElMessage } from 'element-plus'
+import { addWsMessageHandler, removeWsMessageHandler } from '@/utils/websocket'
 
 /* ---------------- stores / router ---------------- */
 const userStore = useUserStore()
@@ -89,44 +92,6 @@ const chatRef = ref()
 const starting = ref(true)
 const chatInputRef = ref()
 
-/* ---------------- WebSocket ---------------- */
-let ws: WebSocket | null = null
-let pingTimer: number | null = null
-const host = import.meta.env.VITE_WS_BASE_URL
-
-function openWs() {
-  let token = userStore.refreshToken ? userStore.refreshToken : userStore.deviceId
-  if (ws && ws.readyState === WebSocket.OPEN) return
-  ws = new WebSocket(`${host}/ws?token=${token}`)
-  ws.onopen = () => {
-    pingTimer = window.setInterval(() => ws?.send('ping'), 25_000)
-  }
-  ws.onclose = () => {
-    if (pingTimer) clearInterval(pingTimer)
-  }
-  ws.onmessage = (e) => {
-    /* TODO: 真正收到消息时，直接 push 到对应会话 */
-    try {
-      const body: WsMsg = JSON.parse(e.data)
-      console.log("ws:" + body.receiver)
-      console.log(body)
-      handleWsMessage(body)
-    } catch (err) {
-      console.error('WS 消息格式错误', e.data)
-    }
-  }
-}
-
-function closeWs() {
-  if (ws) {
-    ws.close()
-    ws = null
-  }
-  if (pingTimer) {
-    clearInterval(pingTimer)
-    pingTimer = null
-  }
-}
 
 /* WS 收到消息后统一入口 */
 function handleWsMessage(raw: WsMsg) {
@@ -247,7 +212,6 @@ const initChating = (id: string) => {
     }
     return
   }
-
   state.chating = { ...target, chatMessageList: [...target.chatMessageList] }
 }
 
@@ -338,8 +302,6 @@ const refreshNewCount = async () => {
   // 处理单聊数据
   for (const brief of singleChatData.data.data) {
     const exist = chatStore.chatList.find(c => c.id === brief.info.id && c.chatType === brief.info.type);
-    console.log(exist)
-    console.log(brief.info.id)
     if (exist) {
       // 单聊返回消息列表，需要添加到现有消息中
       if (brief.messages && brief.messages.length > 0) {
@@ -404,7 +366,7 @@ async function onLoadMore(done: () => void) {
 
 /* ---------------- 生命周期 ---------------- */
 onMounted(() => {
-  openWs()
+  addWsMessageHandler('chat', handleWsMessage)
   handleMyMessage()
   document.addEventListener('mousedown', onMouseDown)
   starting.value = false
@@ -412,7 +374,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   saveSession()
-  closeWs()
+  removeWsMessageHandler('chat', handleWsMessage)
   document.removeEventListener('mousedown', onMouseDown)
 })
 

@@ -58,4 +58,5 @@ export interface LocalConfig {
   setting: string;
   language: string;
   theme: string;
+  articleTheme: string;
 }

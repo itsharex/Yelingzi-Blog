@@ -5,7 +5,7 @@
       <!-- 头部菜单 -->
       <MyHeader></MyHeader>
       <!-- main -->
-      <main style="min-height: 100vh" id="main">
+      <main style="height: 100vh" id="main">
         <router-view></router-view>
       </main>
     </div>

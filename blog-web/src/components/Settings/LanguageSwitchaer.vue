@@ -1,5 +1,5 @@
 <template>
-  <div v-pio="{ text: `这题可以切换语言哦` }" class="i18n pointer" @mouseleave="handleMouseLeaveI18n"
+  <div v-pio="{ text: `这里可以切换语言哦` }" class="i18n pointer" @mouseleave="handleMouseLeaveI18n"
     @mouseenter="handleMouseEnterI18n">
 
     <!-- <component :is="i18nIcon" color="#000" class="i18n-icon " v-if="i18nIcon" /> -->
@@ -74,6 +74,7 @@ $hover-bg: var(--hover-bg);
     visibility: hidden;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
+    z-index: 1000;
   }
 
   .i18n-menu.active {

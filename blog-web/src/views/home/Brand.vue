@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, inject, type Ref, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { t } from '@/utils/i18n'
 import Typeit from "@/components/Typeit/Typeit.vue"
 import WaveOne from "@/components/Waves/WaveOne.vue"

@@ -5,3 +5,7 @@ export const getMessageListService = () => request.get('/api/message/list')
 
 //添加留言
 export const addMessageService = (data: { content: string }) => request.post('/api/message/add', data)
+
+
+export const addLinkMeService = (data: { content: string; email: string; images: string[] }) =>
+  request.post('/api/linkme/message/add', data)

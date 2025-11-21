@@ -1,5 +1,5 @@
 <template>
-  <div v-slide-in class="article-item" v-for="article of articleList" :key="article.id">
+  <div v-slide-in class="article-item" v-if="articleList.length > 0" v-for="article of articleList" :key="article.id">
     <!-- 文章缩略图 -->
     <ImageWithFallback v-pio="{ text: `${article.title}`, type: 'read' }" class="article-cover cover"
       :src="article.articleCover" @click="toArticle(article.id)" />
@@ -49,11 +49,16 @@
       </div>
     </div>
   </div>
+  <div v-else v-for="item in 5" class="article-item">
+    <div class="article-empty">
+      <Empty :loading="loading" />
+    </div>
+  </div>
   <div class="pagination">
-    <proButton v-if="loadingArticle" v-loading.fullscreen.lock="loading" :info="t('loadMore') + '...'" width="120px"
-      before="#ed6ea0" after="#9cd0ed" @click="nextPage">
+    <proButton v-if="loadingArticle && articleList.length > 0" v-loading.fullscreen.lock="!loadingArticle"
+      :info="t('loadMore') + '...'" width="120px" before="#ed6ea0" after="#9cd0ed" @click="nextPage" class="pointer">
     </proButton>
-    <el-card v-else style="width: 100%;">
+    <el-card v-else-if="!loadingArticle && articleList.length > 0" style="width: 100%;">
       <div style="text-align: center;">{{ t('loadEnd') }}</div>
     </el-card>
   </div>
@@ -62,35 +67,42 @@
 <script setup lang="ts">
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue';
 import proButton from '../Button/proButton.vue';
-import { reactive, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { formatDate } from '@/utils/common';
 import type { Article, ArticleList, Category, Tag } from '@/types/article';
 import { getArticleListByPageService } from '@/api/article';
 import { useRouter } from 'vue-router';
 import { useBlogStore } from '@/stores';
 import { t } from '@/utils/i18n'
+import Empty from '../Empty/Empty.vue';
+
 const router = useRouter()
-const loading = ref(false)
+const loading = ref(true)
 const total = ref(0)
 const page = ref(1)
 const pageSize = ref(5)
 const loadingArticle = ref(true)
 const articleList = ref<Article[]>([]);
 
-
-
 const getArticle = async () => {
+  loadingArticle.value = true
+  loading.value = true
+  try {
+    const articleData = await getArticleListByPageService(page.value, 5)
 
-  const articleData = await getArticleListByPageService(page.value, 5)
+    const articles = articleData.data.data;
+    total.value = articles.total
+    for (const article of articles.data) {
+      articleList.value.push(article)
+    }
+    if (page.value * pageSize.value >= total.value) {
+      loadingArticle.value = false
+    }
+  } catch {
+    articleList.value = []
+    loading.value = false
+  }
 
-  const articles = articleData.data.data;
-  total.value = articles.total
-  for (const article of articles.data) {
-    articleList.value.push(article)
-  }
-  if (page.value * pageSize.value >= total.value) {
-    loadingArticle.value = false
-  }
 };
 
 
@@ -134,7 +146,14 @@ onMounted(() => {
   animation-duration: 0.5s;
   transition: all 0.2s ease-in-out 0s;
   visibility: visible;
-  overflow-x: hidden;
+  overflow: hidden;
+
+  .article-empty {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &:hover {
     box-shadow: 0 0 1.5rem var(--box-bg-shadow);

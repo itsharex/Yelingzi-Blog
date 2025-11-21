@@ -15,9 +15,7 @@
       <main class="article-main-container" :style="{ marginRight: showSidebar ? '320px' : '60px' }">
         <div>
           <H1 class="mian-title">{{ article.title }}</H1>
-          <div class="mian-theme">
-            <ArticlePreviewTheme />
-          </div>
+
         </div>
         <div class="article-main">
           <!-- 文章内容 -->
@@ -93,7 +91,6 @@ import { addArticleLikeService, delArticleLikeService, getArticleByIdService, ge
 import { useUserStore, useBlogStore } from '@/stores';
 import ArticleActionCol from './ArticleActionCol.vue';
 import ArticleHeader from './ArticleHeader.vue';
-import ArticlePreviewTheme from './ArticlePreviewTheme.vue';
 
 const blogStore = useBlogStore();
 const isDark = computed(() => blogStore.blogInfo.isDark);
@@ -133,10 +130,8 @@ const loading = ref(false)
 const showSidebar = ref(window.innerWidth > 768)
 const previewTheme = computed(() => userStore.previewTheme)
 
-const layoutRef = inject<Ref<HTMLElement | null>>('scrollContainer', ref<HTMLElement | null>(null));
-
 const scrollElement = computed(() => {
-  return layoutRef.value || undefined;
+  return document.documentElement;
 });
 
 const totalHeadings = ref(0);
@@ -443,7 +438,7 @@ watch(() => showSidebar.value, (newValue) => {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 100;
+  z-index: 10;
   height: 100%;
   transition: width 0.5s ease;
   width: 60px;

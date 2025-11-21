@@ -137,12 +137,12 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .weather-info {
-  position: relative; // 必须，作为绝对定位图标的父容器
+  position: relative;
   display: flex;
   flex-direction: column;
   background-image: linear-gradient(#ffffff00, #caf3f4 50%, #b4f6e2 100%);
   border-radius: 10px;
-  overflow: hidden; // 防止图标超出圆角
+  overflow: hidden;
 
   .tianqi-icon-bg {
     position: absolute;

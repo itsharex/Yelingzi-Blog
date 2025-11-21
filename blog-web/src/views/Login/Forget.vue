@@ -71,8 +71,8 @@ const formModel = ref({
 })
 const formRef = ref()
 const resetFormRef = ref<FormInstance>()
-const countdown = ref(0); // 倒计时剩余时间
-const isCounting = ref(false); // 是否正在倒计时
+const countdown = ref(0);
+const isCounting = ref(false);
 const resetPassword = ref(false)
 const resetPasswordSuccess = ref(false)
 const repasswordKey = ref("")
@@ -230,7 +230,7 @@ const toLogin = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   width: 100%;
 }
 
@@ -332,5 +332,11 @@ const toLogin = () => {
 
 :deep(.el-button>span) {
   cursor: url('/src/assets/cursors/up.cur'), not-allowed !important;
+}
+
+@media (max-width: 767px) {
+  .forget {
+    box-shadow: none;
+  }
 }
 </style>

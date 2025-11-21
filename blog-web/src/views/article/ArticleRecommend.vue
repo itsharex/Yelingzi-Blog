@@ -1,13 +1,13 @@
 <template>
-  <el-card class="section" v-if="articleRecommend.length > 0">
+  <el-card class="section">
     <h3>
       <SvgIcon name="icon-star" />
       推荐文章
     </h3>
-    <div class="post-list">
-      <router-link v-slide-in v-for="article of articleRecommend" :key="article.id" :to="`/article/${article.id}`"
-        class="post-item">
-        <el-image :src="article.articleCover" class="art-img" />
+    <div class="post-list" v-if="articleRecommend.length > 0">
+      <div v-slide-in v-for="article of articleRecommend" :key="article.id" @click="toArticleDetail(article.id)"
+        class="post-item pointer">
+        <ImageWithFallback :src="article.articleCover" class="art-img" />
         <div class="post-meta">
           <div class="post-title">{{ article.title }}</div>
           <div class="post-time">
@@ -15,7 +15,10 @@
             {{ article.createTime }}
           </div>
         </div>
-      </router-link>
+      </div>
+    </div>
+    <div v-else>
+      <Empty description="暂无推荐文章" />
     </div>
   </el-card>
 </template>
@@ -24,7 +27,8 @@
 import { getRecommendArticleListService } from '@/api/article';
 import ImageWithFallback from '@/components/Image/ImageWithFallback.vue';
 import type { ArticleRecommend } from '@/types/article';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import Empty from '@/components/Empty/Empty.vue';
 const articleRecommend = ref<ArticleRecommend[]>([])
 
 const getArticleRecommend = async () => {
@@ -33,8 +37,13 @@ const getArticleRecommend = async () => {
   }
   const res = await getRecommendArticleListService()
   articleRecommend.value = res.data.data
+  console.log('推荐文章', articleRecommend.value);
 }
 
+const toArticleDetail = (id: number) => {
+  // 跳转文章详情页
+  window.location.href = `/article/${id}`
+}
 
 onMounted(() => {
   getArticleRecommend()
@@ -42,13 +51,13 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/styles/variables' as va;
+@use '@/assets/styles/variables' as *;
 
 .section {
-  margin-bottom: va.$spacing-lg;
+  // margin-bottom: va.$spacing-lg;
   margin-top: 20px;
   background: var(--grey-1);
-  border-radius: va.$border-radius-lg;
+  border-radius: $border-radius-lg;
 
   h3 {
     font-size: 1.1rem;
@@ -79,6 +88,7 @@ onMounted(() => {
     flex-direction: column;
     gap: 20px;
     counter-reset: post-counter;
+    padding-bottom: 10px;
 
     .post-item {
       display: flex;
@@ -90,7 +100,7 @@ onMounted(() => {
 
       /* 添加垂直居中 */
       &:hover {
-        transform: translateX(4px);
+        transform: translateX(4px) !important;
 
         .post-title {
           color: #f06f81 !important;

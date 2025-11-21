@@ -1,53 +1,59 @@
 <template>
-  <CommonLayout title="分类" :bg-img="bgImg" />
+  <CommonLayout :title="t('category')" :bg-img="bgImg" />
   <div class="bg">
     <div class="page-container">
 
-      <!-- 分类导航 -->
-      <div class="categories-nav">
-        <div v-for="category in categories" :key="category.categoryName" class="category-tab pointer"
-          :class="{ active: activeCategory === category.categoryName }"
-          @click="scrollToCategory(category.categoryName)">
-          <SvgIcon name="icon-fenlei" />
-          <span>{{ category.categoryName }}</span>
-        </div>
-      </div>
-
-      <!-- 分类列表 -->
-      <div v-for="item in categories">
-        <div :key="item.categoryName" class="category-group" :data-category="item.categoryName"
-          :ref="(el) => { if (el) categoryRefs[item.categoryName] = el as HTMLElement }">
-
-          <h2 class="category-name">
+      <div v-if="categories.length > 0">
+        <!-- 分类导航 -->
+        <div class="categories-nav">
+          <div v-for="category in categories" :key="category.categoryName" class="category-tab pointer"
+            :class="{ active: activeCategory === category.categoryName }"
+            @click="scrollToCategory(category.categoryName)">
             <SvgIcon name="icon-fenlei" />
-            {{ item.categoryName }}
-            <span class="post-count">{{ item.posts.length }} 篇文章</span>
-          </h2>
-
-          <div :ref="(el) => { if (el) dividerRefs[item.categoryName] = el as HTMLElement }">
-            <DividerLine margin="0px" symbol="2"></DividerLine>
+            <span>{{ category.categoryName }}</span>
           </div>
+        </div>
 
-          <div class="posts-list">
-            <div v-for="post in item.posts" :key="post.id" class="post-item" @click="goToPost(post.id)"
-              v-pio="{ text: `${post.title}`, type: 'read' }">
-              <div class="post-date">
-                <span class="month">{{ getYear(post.createTime) }}.{{ getMonth(post.createTime) }}</span>
-                <span class="day">{{ getDate(post.createTime) }}</span>
-              </div>
-              <div class="post-info">
-                <h3 class="post-title">{{ post.title }}</h3>
+        <!-- 分类列表 -->
+        <div v-for="item in categories">
+          <div :key="item.categoryName" class="category-group" :data-category="item.categoryName"
+            :ref="(el) => { if (el) categoryRefs[item.categoryName] = el as HTMLElement }">
+
+            <h2 class="category-name">
+              <SvgIcon name="icon-fenlei" />
+              {{ item.categoryName }}
+              <span class="post-count">{{ item.posts.length }} 篇文章</span>
+            </h2>
+
+            <div :ref="(el) => { if (el) dividerRefs[item.categoryName] = el as HTMLElement }">
+              <DividerLine margin="0px" symbol="2"></DividerLine>
+            </div>
+
+            <div class="posts-list">
+              <div v-for="post in item.posts" :key="post.id" class="post-item" @click="goToPost(post.id)"
+                v-pio="{ text: `${post.title}`, type: 'read' }">
+                <div class="post-date">
+                  <span class="month">{{ getYear(post.createTime) }}.{{ getMonth(post.createTime) }}</span>
+                  <span class="day">{{ getDate(post.createTime) }}</span>
+                </div>
+                <div class="post-info">
+                  <h3 class="post-title">{{ post.title }}</h3>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-
       <!-- 加载状态 -->
-      <div v-if="loading" class="loading-state">
-        <i class="fas fa-spinner fa-spin"></i>
-        加载中...
+      <div v-else class="loading-state">
+        <Empty :loading="loading">
+          <div class="empty-action pointer">
+            <proButton v-if="!loading" info="重新加载" before="#ed6ea0" after="#9cd0ed" width="120px"
+              @click="fetchCategories">
+            </proButton>
+          </div>
+        </Empty>
       </div>
     </div>
   </div>
@@ -61,7 +67,9 @@ import DividerLine from '@/components/Hr/DividerLine.vue'
 import { getDate, getMonth, getYear } from '@/utils/common'
 import { getArticleListFromCategoryService } from '@/api/article'
 import type { Archives } from '@/types/article'
-
+import { t } from '@/utils/i18n'
+import Empty from '@/components/Empty/Empty.vue'
+import proButton from '@/components/Button/proButton.vue'
 
 interface Category {
   id: number
@@ -72,7 +80,7 @@ interface Category {
 
 const categories = reactive<Category[]>([])
 const activeCategory = ref<string | null>(null)
-const loading = ref(false)
+const loading = ref(true)
 const categoryRefs = reactive<Record<string, HTMLElement>>({})
 const dividerRefs = reactive<Record<string, HTMLElement>>({})
 
@@ -132,9 +140,8 @@ const fetchCategories = async () => {
   if (categories.length !== 0) {
     categories.splice(0, categories.length)
   }
-
+  loading.value = true
   try {
-    loading.value = true
     const res = await getArticleListFromCategoryService()
     for (const data of res.data.data) {
       categories.push({
@@ -143,7 +150,7 @@ const fetchCategories = async () => {
         posts: data.simpleArticleList
       })
     }
-  } finally {
+  } catch {
     loading.value = false
   }
 }
@@ -185,6 +192,11 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
 
 .categories-nav {
   position: sticky;
@@ -207,8 +219,8 @@ onBeforeUnmount(() => {
   .category-tab {
     padding: va.$spacing-xs va.$spacing-md;
     border-radius: va.$border-radius-lg;
-    background: var(--hover-bg);
-    color: var(--grey-8);
+    background: var(--hover-secondary);
+    color: var(--color-black);
     transition: all 0.3s ease;
     white-space: nowrap;
     display: flex;
@@ -222,7 +234,7 @@ onBeforeUnmount(() => {
 
     &.active {
       background: va.$primary;
-      color: var(--grey-8);
+      color: var(--color-white);
     }
   }
 }
@@ -282,8 +294,9 @@ onBeforeUnmount(() => {
 
 .loading-state {
   text-align: center;
-  padding: 2rem;
   color: var(--text-secondary);
+  height: 260px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {

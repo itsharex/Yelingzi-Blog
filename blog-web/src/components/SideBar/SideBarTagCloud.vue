@@ -4,13 +4,16 @@
       <SvgIcon name="icon-youhuiquan" style="margin-right: 0.15rem" />
       {{ t('tagCloud') }}
     </div>
-    <div class="tag-cloud" ref="wrapper" @mouseenter="stopRotate" @mouseleave="startRotate">
+    <div v-if="data.length > 0" class="tag-cloud" ref="wrapper" @mouseenter="stopRotate" @mouseleave="startRotate">
       <p v-for="(item, index) in data" :key="index" ref="tag" @click="clickTag(item)"
         @mouseenter="handleTagHover(index)" @mouseleave="handleTagLeave"
         :class="{ 'tag-dimmed': hoveredIndex !== null && hoveredIndex !== index }">
 
         {{ item.tagName }}
       </p>
+    </div>
+    <div v-else class="tag-cloud">
+      <Empty :loading="loading" />
     </div>
   </div>
 </template>
@@ -22,6 +25,7 @@ import type { Tags } from '@/types/tag';
 import { useRouter } from 'vue-router';
 import { useBlogStore } from '@/stores';
 import { t } from '@/utils/i18n'
+import Empty from '../Empty/Empty.vue';
 type TimeoutHandle = ReturnType<typeof setTimeout>
 
 interface TagItem {
@@ -33,6 +37,7 @@ interface TagItem {
 const router = useRouter();
 
 const data = ref<Tags[]>([]);
+const loading = ref(true);
 const wrapper = ref<HTMLElement | null>(null);
 const tag = ref<HTMLParagraphElement[]>([]);
 const tagList = ref<TagItem[]>([]);
@@ -174,8 +179,14 @@ const handleTagLeave = () => {
 
 // 获取标签列表
 const getTagList = async () => {
-  const res = await getTagListService();
-  data.value = res.data.data;
+  try {
+    const res = await getTagListService();
+    data.value = res.data.data;
+  } catch (error) {
+    console.error('Failed to fetch tag list:', error);
+    loading.value = false;
+  }
+
 };
 
 // 生命周期钩子

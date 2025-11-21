@@ -136,9 +136,8 @@ const formWrapStyle = computed(() => ({
 // 常量数据
 const siteInfo = ['网站名称:  叶玲子的小栈',
   '网址:  https://www.yeling.top',
-  '头像:  https://www.yeling.top/image/logo.jpg',
-  '描述:  记录学习、生活、兴趣的次元小栈',
-  '网站封面:  https://www.yeling.top/image/cover.jpg'
+  '网站封面:  https://www.yeling.top/image/logo.jpg',
+  '描述:  记录学习、生活、兴趣的次元小栈'
 ]
 
 const applicationInfo = [
@@ -156,22 +155,21 @@ const toggleEnvelope = () => {
 
 const submitFriend = async () => {
   try {
-    // 确保form.value已正确引用表单实例
     await formRef.value?.validate();
-
-    // 验证通过，执行提交逻辑
-    if (userState.getIsLogin()) {
-      await addUserFriendService({ ...friend.value });
-    } else {
-      await addFriendService({ ...friend.value });
-    }
-    ElMessage.success('提交成功，待管理员审核！');
-    resetFriend();
-    showEnvelope.value = false;
-
   } catch (error) {
     ElMessage.error('请完善表单内容后再提交~');
+    return;
   }
+
+  // 验证通过，执行提交逻辑
+  if (userState.getIsLogin()) {
+    await addUserFriendService({ ...friend.value });
+  } else {
+    await addFriendService({ ...friend.value });
+  }
+  ElMessage.success('提交成功，待管理员审核！');
+  resetFriend();
+  showEnvelope.value = false;
 };
 
 const resetFriend = () => {

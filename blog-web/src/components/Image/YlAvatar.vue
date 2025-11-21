@@ -9,7 +9,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import defaultAvatar from '@/assets/images/avatar.jpg'
-import SvgIcon from '../SvgIcon/SvgIcon.vue';
 
 interface Props {
   src?: string
